@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    // NodeNext, et pas "bundler" : le paquet est publié en ESM et chargé par
+    // Node lui-même (les deux serveurs le gardent externe au bundle avec
+    // esbuild --packages=external). Node EXIGE l'extension sur un import
+    // relatif ; "bundler" l'autorisait absente, le build passait et le
+    // conteneur mourait au démarrage — vécu sur @hallucine/tente. NodeNext
+    // refuse à la compilation ce que Node refuse à l'exécution.
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "lib": ["ES2022"],
+    "strict": true,
+    "noUncheckedIndexedAccess": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true
+  },
+  "include": ["src"]
+}

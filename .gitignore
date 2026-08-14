@@ -1,0 +1,7 @@
+node_modules/
+# dist/ est VERSIONNÉ, à dessein : le paquet s'installe depuis GitHub
+# (github:contact998/hallucine-contracts#vX.Y.Z) et ne doit surtout pas
+# déclencher de build chez le consommateur — un script `prepare` provoquerait
+# une installation imbriquée sans lockfile sur Railway (panne du 08/08/2026
+# sur @hallucine/tente : ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION).
+# Le test src/dist-a-jour.test.ts garantit que dist/ suit src/.

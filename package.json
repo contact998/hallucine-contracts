@@ -1,0 +1,31 @@
+{
+  "name": "@hallucine/contracts",
+  "version": "0.1.0",
+  "description": "Les contrats de la frontière CRM → site : schémas Zod et versions des routes publiques. Aucune logique métier — la projection et les allowlists restent côté CRM, ce paquet dit seulement la FORME de ce qui circule.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.9",
+    "zod": "^4.1.12"
+  }
+}
