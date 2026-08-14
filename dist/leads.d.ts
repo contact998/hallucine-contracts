@@ -35,9 +35,12 @@ export declare const LEAD_CONTACT_TYPES: readonly ["appel", "mail", "autre"];
 export declare const LEAD_DOCUMENT_TYPES: readonly ["brochure", "technique"];
 export declare const LEAD_LANGS: readonly ["fr", "en", "de", "es", "it", "pt"];
 /**
- * Longueurs maximales — les varchar réels de la base CRM (prospects/persons).
- * Le producteur les applique en validation ; le consommateur les applique en
- * TRONCATURE. Un dépassement n'est jamais un lead perdu.
+ * Longueurs maximales, en OCTETS UTF-8 — l'unité de MySQL, pas celle de
+ * JavaScript. « Saint-Étienne » fait 14 caractères et 15 octets : borner en
+ * caractères laissait passer des valeurs trop lourdes pour leur colonne.
+ *
+ * Le producteur les applique en validation, le consommateur en TRONCATURE.
+ * Un dépassement n'est jamais un lead perdu.
  */
 export declare const LEAD_LIMITES: {
     readonly entreprise: 255;
@@ -52,7 +55,8 @@ export declare const LEAD_LIMITES: {
     readonly pays: 100;
     readonly lang: 10;
     readonly requestId: 64;
-    /** TEXT MySQL (65 535 octets) — borne large, le configurateur écrit long. */
+    /** TEXT MySQL = 65 535 OCTETS. Marge gardée pour la ligne « Source » que
+     *  le CRM ajoute aux notes après réception. */
     readonly notes: 60000;
 };
 /**
@@ -61,7 +65,7 @@ export declare const LEAD_LIMITES: {
  * lead perdu : l'émetteur envoie quand même, le CRM tronquera.
  */
 export declare const leadV1ProducteurSchema: z.ZodObject<{
-    entreprise: z.ZodString;
+    entreprise: z.ZodIntersection<z.ZodString, z.ZodString>;
     prenom: z.ZodOptional<z.ZodString>;
     personne: z.ZodOptional<z.ZodString>;
     email: z.ZodOptional<z.ZodString>;
@@ -87,7 +91,7 @@ export declare const leadV1ProducteurSchema: z.ZodObject<{
         it: "it";
         pt: "pt";
     }>;
-    requestId: z.ZodString;
+    requestId: z.ZodIntersection<z.ZodString, z.ZodString>;
     documentType: z.ZodOptional<z.ZodEnum<{
         brochure: "brochure";
         technique: "technique";

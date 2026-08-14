@@ -63,6 +63,14 @@ describe("producteur (le site) — strict avant l'envoi", () => {
     expect(leadV1ProducteurSchema.safeParse({ ...lead, documentType: "devis" }).success).toBe(false);
   });
 
+  it("borne en OCTETS, pas en caractères — l'unité de MySQL", () => {
+    // « é » pèse 2 octets : 60 caractères accentués = 120 octets, au-delà
+    // d'une colonne de 100. Une borne en caractères laissait passer.
+    const villeAccentuee = "é".repeat(60);
+    expect(villeAccentuee.length).toBeLessThan(LEAD_LIMITES.ville);
+    expect(leadV1ProducteurSchema.safeParse({ ...lead, ville: villeAccentuee }).success).toBe(false);
+  });
+
   it("borne les longueurs aux varchar réels de la base", () => {
     expect(
       leadV1ProducteurSchema.safeParse({ ...lead, ville: "x".repeat(LEAD_LIMITES.ville + 1) }).success,

@@ -39,9 +39,12 @@ export const LEAD_DOCUMENT_TYPES = ["brochure", "technique"] as const;
 export const LEAD_LANGS = ["fr", "en", "de", "es", "it", "pt"] as const;
 
 /**
- * Longueurs maximales — les varchar réels de la base CRM (prospects/persons).
- * Le producteur les applique en validation ; le consommateur les applique en
- * TRONCATURE. Un dépassement n'est jamais un lead perdu.
+ * Longueurs maximales, en OCTETS UTF-8 — l'unité de MySQL, pas celle de
+ * JavaScript. « Saint-Étienne » fait 14 caractères et 15 octets : borner en
+ * caractères laissait passer des valeurs trop lourdes pour leur colonne.
+ *
+ * Le producteur les applique en validation, le consommateur en TRONCATURE.
+ * Un dépassement n'est jamais un lead perdu.
  */
 export const LEAD_LIMITES = {
   entreprise: 255,
@@ -56,30 +59,57 @@ export const LEAD_LIMITES = {
   pays: 100,
   lang: 10,
   requestId: 64,
-  /** TEXT MySQL (65 535 octets) — borne large, le configurateur écrit long. */
+  /** TEXT MySQL = 65 535 OCTETS. Marge gardée pour la ligne « Source » que
+   *  le CRM ajoute aux notes après réception. */
   notes: 60000,
 } as const;
 
 // ─── Le payload ────────────────────────────────────────────────────────────
 
+/**
+ * Compte les octets UTF-8 — l'unité des colonnes MySQL.
+ *
+ * Calculé à la main plutôt qu'avec TextEncoder : ce paquet ne dépend ni du DOM
+ * ni des types Node, et doit rester consommable par le serveur comme par le
+ * navigateur. Les règles UTF-8 : < 0x80 → 1 octet, < 0x800 → 2, le reste → 3,
+ * et une paire de substituts (emoji) → 4 pour deux unités UTF-16.
+ */
+const octets = (v: string): number => {
+  let total = 0;
+  for (let i = 0; i < v.length; i++) {
+    const code = v.charCodeAt(i);
+    if (code < 0x80) total += 1;
+    else if (code < 0x800) total += 2;
+    else if (code >= 0xd800 && code <= 0xdbff) {
+      total += 4;
+      i++; // le substitut bas appartient au même caractère
+    } else total += 3;
+  }
+  return total;
+};
+
+/** Une chaîne bornée en OCTETS, pas en unités UTF-16. */
+const texteBorne = (max: number) =>
+  z.string().refine((v) => octets(v) <= max, { message: `dépasse ${max} octets` });
+
 const champsForme = {
-  entreprise: z.string().trim().min(1).max(LEAD_LIMITES.entreprise),
-  prenom: z.string().max(LEAD_LIMITES.prenom).optional(),
-  personne: z.string().max(LEAD_LIMITES.personne).optional(),
-  email: z.string().max(LEAD_LIMITES.email).optional(),
-  telephone: z.string().max(LEAD_LIMITES.telephone).optional(),
-  siret: z.string().max(LEAD_LIMITES.siret).optional(),
-  produit: z.string().max(LEAD_LIMITES.produit).optional(),
-  notes: z.string().max(LEAD_LIMITES.notes).optional(),
-  ville: z.string().max(LEAD_LIMITES.ville).optional(),
-  codePostal: z.string().max(LEAD_LIMITES.codePostal).optional(),
-  pays: z.string().max(LEAD_LIMITES.pays).optional(),
+  entreprise: z.string().trim().min(1).and(texteBorne(LEAD_LIMITES.entreprise)),
+  prenom: texteBorne(LEAD_LIMITES.prenom).optional(),
+  personne: texteBorne(LEAD_LIMITES.personne).optional(),
+  email: texteBorne(LEAD_LIMITES.email).optional(),
+  telephone: texteBorne(LEAD_LIMITES.telephone).optional(),
+  siret: texteBorne(LEAD_LIMITES.siret).optional(),
+  produit: texteBorne(LEAD_LIMITES.produit).optional(),
+  notes: texteBorne(LEAD_LIMITES.notes).optional(),
+  ville: texteBorne(LEAD_LIMITES.ville).optional(),
+  codePostal: texteBorne(LEAD_LIMITES.codePostal).optional(),
+  pays: texteBorne(LEAD_LIMITES.pays).optional(),
   contactType: z.enum(LEAD_CONTACT_TYPES).optional(),
   /** ISO « 2026-06-15 » attendu ; le CRM ignore en silence ce qu'il ne sait pas lire. */
   dateRealisationEnvisagee: z.string().max(30).optional(),
   abandonPartiel: z.boolean().optional(),
   lang: z.enum(LEAD_LANGS),
-  requestId: z.string().min(1).max(LEAD_LIMITES.requestId),
+  requestId: z.string().min(1).and(texteBorne(LEAD_LIMITES.requestId)),
   documentType: z.enum(LEAD_DOCUMENT_TYPES).optional(),
 };
 
