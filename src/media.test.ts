@@ -60,6 +60,12 @@ describe("consommateur (tolérant)", () => {
 });
 
 describe("producteur (strict)", () => {
+  it("n'émet QUE la version du paquet — le tolérant accepte l'avenir, pas le strict", () => {
+    expect(
+      mediaCollectionV1StrictSchema.safeParse({ ...collection, contractVersion: 2 }).success,
+    ).toBe(false);
+  });
+
   it("accepte la forme nominale", () => {
     expect(mediaCollectionV1StrictSchema.safeParse(collection).success).toBe(true);
   });

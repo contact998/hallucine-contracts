@@ -1,5 +1,6 @@
 export {
   MEDIA_CONTRACT_VERSION,
+  MEDIA_V1_PATH,
   mediaItemV1Schema,
   mediaItemV1StrictSchema,
   mediaCollectionV1Schema,

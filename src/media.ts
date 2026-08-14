@@ -25,6 +25,13 @@ import { z } from "zod";
  *  la règle est d'ajouter, pas de retirer. Le site la vérifie en réception. */
 export const MEDIA_CONTRACT_VERSION = 1;
 
+/**
+ * Le chemin de la route, ici et nulle part ailleurs : producteur et
+ * consommateur l'importent tous deux — un chemin dupliqué en dur serait la
+ * seule pièce du contrat sans alarme de dérive.
+ */
+export const MEDIA_V1_PATH = "/api/public/v1/media";
+
 const itemForme = {
   id: z.number().int(),
   url: z.string(),
@@ -61,7 +68,12 @@ const collectionForme = <T extends z.ZodType>(item: T) => ({
 export const mediaCollectionV1Schema = z.object(collectionForme(mediaItemV1Schema));
 export type MediaCollectionV1 = z.infer<typeof mediaCollectionV1Schema>;
 
-/** L'enveloppe complète, côté producteur (stricte). */
-export const mediaCollectionV1StrictSchema = z.strictObject(
-  collectionForme(mediaItemV1StrictSchema),
-);
+/**
+ * L'enveloppe complète, côté producteur (stricte). `contractVersion` y est
+ * FIGÉE à la version émise par CE paquet : le tolérant accepte l'avenir,
+ * le strict n'émet que le présent.
+ */
+export const mediaCollectionV1StrictSchema = z.strictObject({
+  ...collectionForme(mediaItemV1StrictSchema),
+  contractVersion: z.literal(MEDIA_CONTRACT_VERSION),
+});

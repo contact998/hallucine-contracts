@@ -23,6 +23,12 @@ import { z } from "zod";
 /** Version du contrat média. S'incrémente sur rupture — donc en théorie jamais :
  *  la règle est d'ajouter, pas de retirer. Le site la vérifie en réception. */
 export declare const MEDIA_CONTRACT_VERSION = 1;
+/**
+ * Le chemin de la route, ici et nulle part ailleurs : producteur et
+ * consommateur l'importent tous deux — un chemin dupliqué en dur serait la
+ * seule pièce du contrat sans alarme de dérive.
+ */
+export declare const MEDIA_V1_PATH = "/api/public/v1/media";
 /** Un média tel que le site le lit — clés inconnues ignorées (additif). */
 export declare const mediaItemV1Schema: z.ZodObject<{
     id: z.ZodNumber;
@@ -66,9 +72,13 @@ export declare const mediaCollectionV1Schema: z.ZodObject<{
     }, z.core.$strip>>;
 }, z.core.$strip>;
 export type MediaCollectionV1 = z.infer<typeof mediaCollectionV1Schema>;
-/** L'enveloppe complète, côté producteur (stricte). */
+/**
+ * L'enveloppe complète, côté producteur (stricte). `contractVersion` y est
+ * FIGÉE à la version émise par CE paquet : le tolérant accepte l'avenir,
+ * le strict n'émet que le présent.
+ */
 export declare const mediaCollectionV1StrictSchema: z.ZodObject<{
-    contractVersion: z.ZodNumber;
+    contractVersion: z.ZodLiteral<1>;
     generatedAt: z.ZodString;
     digest: z.ZodString;
     items: z.ZodArray<z.ZodObject<{
