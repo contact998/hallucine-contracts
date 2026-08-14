@@ -53,7 +53,17 @@ export declare const mediaCollectionV1Schema: z.ZodObject<{
     contractVersion: z.ZodNumber;
     generatedAt: z.ZodString;
     digest: z.ZodString;
-    items: z.ZodArray<z.ZodType<unknown, unknown, z.core.$ZodTypeInternals<unknown, unknown>>>;
+    items: z.ZodArray<z.ZodObject<{
+        id: z.ZodNumber;
+        url: z.ZodString;
+        mimeType: z.ZodString;
+        width: z.ZodNullable<z.ZodNumber>;
+        height: z.ZodNullable<z.ZodNumber>;
+        alt: z.ZodNullable<z.ZodString>;
+        titre: z.ZodNullable<z.ZodString>;
+        posterUrl: z.ZodNullable<z.ZodString>;
+        categorie: z.ZodString;
+    }, z.core.$strip>>;
 }, z.core.$strip>;
 export type MediaCollectionV1 = z.infer<typeof mediaCollectionV1Schema>;
 /** L'enveloppe complète, côté producteur (stricte). */
@@ -61,5 +71,15 @@ export declare const mediaCollectionV1StrictSchema: z.ZodObject<{
     contractVersion: z.ZodNumber;
     generatedAt: z.ZodString;
     digest: z.ZodString;
-    items: z.ZodArray<z.ZodType<unknown, unknown, z.core.$ZodTypeInternals<unknown, unknown>>>;
+    items: z.ZodArray<z.ZodObject<{
+        id: z.ZodNumber;
+        url: z.ZodString;
+        mimeType: z.ZodString;
+        width: z.ZodNullable<z.ZodNumber>;
+        height: z.ZodNullable<z.ZodNumber>;
+        alt: z.ZodNullable<z.ZodString>;
+        titre: z.ZodNullable<z.ZodString>;
+        posterUrl: z.ZodNullable<z.ZodString>;
+        categorie: z.ZodString;
+    }, z.core.$strict>>;
 }, z.core.$strict>;

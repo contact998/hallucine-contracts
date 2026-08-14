@@ -44,7 +44,7 @@ export type MediaItemV1 = z.infer<typeof mediaItemV1Schema>;
 /** Le même, côté producteur — une clé de trop fait échouer l'émission. */
 export const mediaItemV1StrictSchema = z.strictObject(itemForme);
 
-const collectionForme = (item: z.ZodType) => ({
+const collectionForme = <T extends z.ZodType>(item: T) => ({
   /** Toujours MEDIA_CONTRACT_VERSION côté producteur ; le site tolère les
    *  versions SUPÉRIEURES (un contrat v2 additif reste lisible en v1). */
   contractVersion: z.number().int().min(1),
