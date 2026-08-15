@@ -9,3 +9,4 @@ export {
 export type { MediaItemV1, MediaCollectionV1 } from "./media.js";
 export * from "./catalogue.js";
 export * from "./leads.js";
+export * from "./solutions.js";
