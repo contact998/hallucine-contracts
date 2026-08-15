@@ -25,7 +25,13 @@
   },
   "devDependencies": {
     "typescript": "^5.9.3",
-    "vitest": "^2.1.9",
+    "vitest": "^3.2.7",
     "zod": "^4.1.12"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "^7.3.2",
+      "esbuild": "^0.25.0"
+    }
   }
 }
