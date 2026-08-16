@@ -37,6 +37,19 @@ const itemForme = {
     height: z.number().int().nullable(),
     alt: z.string().nullable(),
     titre: z.string().nullable(),
+    /**
+     * `alt` et `titre` traduits, par locale (en/de/es/it/pt). Le français est la
+     * SOURCE et reste dans `alt`/`titre` ; ces cartes ne le contiennent jamais.
+     * Une locale absente = pas encore traduite, le site retombe sur le français.
+     *
+     * Ajouté le 16/08/2026. Jusque-là le site servait le texte alternatif
+     * français sur les six domaines : c'est ce que Google lit pour indexer une
+     * image, et ce qu'un lecteur d'écran prononce à un visiteur aveugle. Même
+     * forme que `designations` du contrat catalogue — un précédent, pas une
+     * invention.
+     */
+    alts: z.record(z.string(), z.string()),
+    titres: z.record(z.string(), z.string()),
     posterUrl: z.string().nullable(),
     categorie: z.string(),
 };

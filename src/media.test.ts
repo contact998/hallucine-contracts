@@ -19,6 +19,8 @@ const item = {
   height: 900,
   alt: "Écran gonflable au crépuscule",
   titre: null,
+  alts: { de: "Aufblasbare Leinwand in der Dämmerung" },
+  titres: {},
   posterUrl: null,
   categorie: "realisations",
 };
@@ -53,9 +55,19 @@ describe("consommateur (tolérant)", () => {
     expect(mediaItemV1Schema.safeParse({ ...item, url: 12 }).success).toBe(false);
   });
 
-  it("exige null explicite, pas l'absence — la projection CRM écrit les 9 clés", () => {
+  it("exige null explicite, pas l'absence — la projection CRM écrit les 11 clés", () => {
     const { titre: _titre, ...sansTitre } = item;
     expect(mediaItemV1Schema.safeParse(sansTitre).success).toBe(false);
+  });
+
+  it("exige les cartes de traduction, même vides — absentes, le site croirait à un média sans langue", () => {
+    const { alts: _alts, ...sansAlts } = item;
+    expect(mediaItemV1Schema.safeParse(sansAlts).success).toBe(false);
+    expect(mediaItemV1Schema.safeParse({ ...item, alts: {} }).success).toBe(true);
+  });
+
+  it("refuse une carte de traduction qui ne serait pas du texte", () => {
+    expect(mediaItemV1Schema.safeParse({ ...item, alts: { de: 42 } }).success).toBe(false);
   });
 });
 

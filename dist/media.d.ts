@@ -38,6 +38,8 @@ export declare const mediaItemV1Schema: z.ZodObject<{
     height: z.ZodNullable<z.ZodNumber>;
     alt: z.ZodNullable<z.ZodString>;
     titre: z.ZodNullable<z.ZodString>;
+    alts: z.ZodRecord<z.ZodString, z.ZodString>;
+    titres: z.ZodRecord<z.ZodString, z.ZodString>;
     posterUrl: z.ZodNullable<z.ZodString>;
     categorie: z.ZodString;
 }, z.core.$strip>;
@@ -51,6 +53,8 @@ export declare const mediaItemV1StrictSchema: z.ZodObject<{
     height: z.ZodNullable<z.ZodNumber>;
     alt: z.ZodNullable<z.ZodString>;
     titre: z.ZodNullable<z.ZodString>;
+    alts: z.ZodRecord<z.ZodString, z.ZodString>;
+    titres: z.ZodRecord<z.ZodString, z.ZodString>;
     posterUrl: z.ZodNullable<z.ZodString>;
     categorie: z.ZodString;
 }, z.core.$strict>;
@@ -67,6 +71,8 @@ export declare const mediaCollectionV1Schema: z.ZodObject<{
         height: z.ZodNullable<z.ZodNumber>;
         alt: z.ZodNullable<z.ZodString>;
         titre: z.ZodNullable<z.ZodString>;
+        alts: z.ZodRecord<z.ZodString, z.ZodString>;
+        titres: z.ZodRecord<z.ZodString, z.ZodString>;
         posterUrl: z.ZodNullable<z.ZodString>;
         categorie: z.ZodString;
     }, z.core.$strip>>;
@@ -89,6 +95,8 @@ export declare const mediaCollectionV1StrictSchema: z.ZodObject<{
         height: z.ZodNullable<z.ZodNumber>;
         alt: z.ZodNullable<z.ZodString>;
         titre: z.ZodNullable<z.ZodString>;
+        alts: z.ZodRecord<z.ZodString, z.ZodString>;
+        titres: z.ZodRecord<z.ZodString, z.ZodString>;
         posterUrl: z.ZodNullable<z.ZodString>;
         categorie: z.ZodString;
     }, z.core.$strict>>;
