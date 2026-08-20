@@ -35,7 +35,13 @@ export const CATALOGUE_V1_PATH = "/api/public/v1/catalogue";
  * du CRM (Gate 14), figé là-bas par test — et un test CRM compare les deux
  * listes. `occasion` n'y entrera jamais.
  */
-export const CATALOGUE_V1_ROLES = ["ecran_vente", "pack", "location", "tente_vente"] as const;
+export const CATALOGUE_V1_ROLES = [
+  "ecran_vente",
+  "pack",
+  "location",
+  "tente_vente",
+  "mobilier_vente",
+] as const;
 export type CatalogueRoleV1 = (typeof CATALOGUE_V1_ROLES)[number];
 
 /** L'URL complète pour un rôle — le nom du paramètre appartient au contrat. */
