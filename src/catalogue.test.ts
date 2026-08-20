@@ -26,6 +26,7 @@ const specs = {
   personnesMax: 2,
   garantieAns: 5,
   driveIn: false,
+  largeurCm: null, profondeurCm: null, hauteurCm: null, placesAssises: null,
 };
 
 const item = {
@@ -125,6 +126,19 @@ describe("producteur (strict)", () => {
     expect(
       catalogueItemV1StrictSchema.safeParse({ ...item, specs: { ...specs, poids: 14.2 } }).success,
     ).toBe(false);
+  });
+
+  it("accepte les cotes d'encombrement et les places assises (mobilier)", () => {
+    const specsMobilier = {
+      ...specs,
+      largeurCm: 200, profondeurCm: 80, hauteurCm: 85, placesAssises: 2,
+    };
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, specs: specsMobilier }).success).toBe(true);
+  });
+
+  it("exige les quatre clés d'encombrement, même à null (contrat en présence)", () => {
+    const { largeurCm, ...sansLargeur } = { ...specs };
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, specs: sansLargeur }).success).toBe(false);
   });
 
   it("REFUSE une clé de trop dans une caractéristique traduite — strict jusqu'aux feuilles", () => {

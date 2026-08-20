@@ -56,6 +56,12 @@ const specsForme = {
   personnesMax: z.number().nullable(),
   garantieAns: z.number().nullable(),
   driveIn: z.boolean(),
+  // Encombrement au sol et capacité — mobilier gonflable (2026-08-20).
+  // Null sur les écrans : la clé existe partout, la valeur non.
+  largeurCm: z.number().nullable(),
+  profondeurCm: z.number().nullable(),
+  hauteurCm: z.number().nullable(),
+  placesAssises: z.number().nullable(),
 };
 
 export const catalogueSpecsV1Schema = z.object(specsForme);
