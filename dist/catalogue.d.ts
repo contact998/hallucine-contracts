@@ -51,6 +51,7 @@ export declare const catalogueSpecsV1Schema: z.ZodObject<{
     profondeurCm: z.ZodNullable<z.ZodNumber>;
     hauteurCm: z.ZodNullable<z.ZodNumber>;
     placesAssises: z.ZodNullable<z.ZodNumber>;
+    hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
 }, z.core.$strip>;
 export declare const catalogueSpecsV1StrictSchema: z.ZodObject<{
     tailleHorsTout: z.ZodNullable<z.ZodString>;
@@ -67,6 +68,7 @@ export declare const catalogueSpecsV1StrictSchema: z.ZodObject<{
     profondeurCm: z.ZodNullable<z.ZodNumber>;
     hauteurCm: z.ZodNullable<z.ZodNumber>;
     placesAssises: z.ZodNullable<z.ZodNumber>;
+    hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
 }, z.core.$strict>;
 export type CatalogueSpecsV1 = z.infer<typeof catalogueSpecsV1Schema>;
 export declare const catalogueCaracteristiqueV1Schema: z.ZodObject<{
@@ -99,6 +101,7 @@ export declare const catalogueItemV1Schema: z.ZodObject<{
         profondeurCm: z.ZodNullable<z.ZodNumber>;
         hauteurCm: z.ZodNullable<z.ZodNumber>;
         placesAssises: z.ZodNullable<z.ZodNumber>;
+        hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
     }, z.core.$strip>>;
     caracteristiques: z.ZodArray<z.ZodObject<{
         libelle: z.ZodString;
@@ -143,6 +146,7 @@ export declare const catalogueItemV1StrictSchema: z.ZodObject<{
         profondeurCm: z.ZodNullable<z.ZodNumber>;
         hauteurCm: z.ZodNullable<z.ZodNumber>;
         placesAssises: z.ZodNullable<z.ZodNumber>;
+        hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
     }, z.core.$strip>>;
     caracteristiques: z.ZodArray<z.ZodObject<{
         libelle: z.ZodString;
@@ -192,6 +196,7 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             profondeurCm: z.ZodNullable<z.ZodNumber>;
             hauteurCm: z.ZodNullable<z.ZodNumber>;
             placesAssises: z.ZodNullable<z.ZodNumber>;
+            hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
         }, z.core.$strip>>;
         caracteristiques: z.ZodArray<z.ZodObject<{
             libelle: z.ZodString;
@@ -234,6 +239,7 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             profondeurCm: z.ZodNullable<z.ZodNumber>;
             hauteurCm: z.ZodNullable<z.ZodNumber>;
             placesAssises: z.ZodNullable<z.ZodNumber>;
+            hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
         }, z.core.$strip>>;
         caracteristiques: z.ZodArray<z.ZodObject<{
             libelle: z.ZodString;
@@ -289,6 +295,7 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             profondeurCm: z.ZodNullable<z.ZodNumber>;
             hauteurCm: z.ZodNullable<z.ZodNumber>;
             placesAssises: z.ZodNullable<z.ZodNumber>;
+            hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
         }, z.core.$strip>>;
         caracteristiques: z.ZodArray<z.ZodObject<{
             libelle: z.ZodString;
@@ -331,6 +338,7 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             profondeurCm: z.ZodNullable<z.ZodNumber>;
             hauteurCm: z.ZodNullable<z.ZodNumber>;
             placesAssises: z.ZodNullable<z.ZodNumber>;
+            hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
         }, z.core.$strip>>;
         caracteristiques: z.ZodArray<z.ZodObject<{
             libelle: z.ZodString;

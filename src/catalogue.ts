@@ -68,6 +68,11 @@ const specsForme = {
   profondeurCm: z.number().nullable(),
   hauteurCm: z.number().nullable(),
   placesAssises: z.number().nullable(),
+  /* Hauteur du COUSSIN, sol → assise — pas la hauteur hors tout. Elle sert au
+     site à poser une personne sur un meuble : un pouf de 40 cm et un tabouret
+     de 70 cm ne s'assoient pas à la même hauteur, et une valeur unique faisait
+     flotter les uns et enfoncer les autres. Null sur ce qui ne s'assoit pas. */
+  hauteurAssiseCm: z.number().nullable(),
 };
 
 export const catalogueSpecsV1Schema = z.object(specsForme);

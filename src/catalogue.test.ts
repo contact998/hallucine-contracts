@@ -26,7 +26,7 @@ const specs = {
   personnesMax: 2,
   garantieAns: 5,
   driveIn: false,
-  largeurCm: null, profondeurCm: null, hauteurCm: null, placesAssises: null,
+  largeurCm: null, profondeurCm: null, hauteurCm: null, placesAssises: null, hauteurAssiseCm: null,
 };
 
 const item = {
