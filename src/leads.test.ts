@@ -11,6 +11,8 @@ import {
   leadReponseV1Schema,
   leadV1ConsommateurSchema,
   leadV1ProducteurSchema,
+  LEAD_CONFIGURATEUR_LIMITES,
+  configurateurSchema,
 } from "./leads.js";
 
 const lead = {
@@ -136,5 +138,49 @@ describe("le chemin et la version", () => {
   it("sont au contrat", () => {
     expect(LEADS_V1_PATH).toBe("/api/integrations/v1/leads");
     expect(LEAD_CONTRACT_VERSION).toBe(1);
+  });
+});
+
+describe("la composition d'un configurateur", () => {
+  const compo = {
+    gamme: "lounge" as const,
+    lien: "https://hallucinecran.fr/configurateur-lounge-gonflable?c=9-ban16",
+    apercuUrl: "https://pub-dc19.r2.dev/devis/1787975421328-apercu.jpg",
+    articles: [
+      { slug: "canape-double", quantite: 4, designation: "Canapé 2 places", precision: "Habillage : Noir" },
+      { slug: "tente-x-5x5", quantite: 3 },
+    ],
+  };
+
+  it("accompagne un lead", () => {
+    expect(leadV1ProducteurSchema.safeParse({ ...lead, configurateur: compo }).success).toBe(true);
+    // Le champ reste facultatif : un lead ordinaire ne porte pas de composition.
+    expect(leadV1ProducteurSchema.safeParse(lead).success).toBe(true);
+  });
+
+  it("ne transporte AUCUN prix — le montant se lit au catalogue du CRM", () => {
+    const avecPrix = {
+      ...compo,
+      articles: [{ slug: "canape-double", quantite: 1, prixHT: 1 }],
+    };
+    // strictObject sur l'article : un prix soumis par un formulaire public est
+    // refusé à l'émission, pas silencieusement ignoré.
+    expect(configurateurSchema.safeParse(avecPrix).success).toBe(false);
+  });
+
+  it("borne la quantité, la liste et la gamme", () => {
+    expect(configurateurSchema.safeParse({ ...compo, gamme: "ecran" }).success).toBe(false);
+    expect(configurateurSchema.safeParse({
+      gamme: "tente",
+      articles: [{ slug: "x", quantite: 0 }],
+    }).success).toBe(false);
+    expect(configurateurSchema.safeParse({
+      gamme: "tente",
+      articles: Array.from({ length: LEAD_CONFIGURATEUR_LIMITES.articles + 1 }, () => ({ slug: "x", quantite: 1 })),
+    }).success).toBe(false);
+  });
+
+  it("laisse passer une composition sans article — le CRM décidera", () => {
+    expect(configurateurSchema.safeParse({ gamme: "mobilier", articles: [] }).success).toBe(true);
   });
 });

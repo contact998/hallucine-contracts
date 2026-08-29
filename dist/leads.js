@@ -34,6 +34,8 @@ export const LEADS_V1_PATH = "/api/integrations/v1/leads";
 export const LEAD_CONTACT_TYPES = ["appel", "mail", "autre"];
 export const LEAD_DOCUMENT_TYPES = ["brochure", "technique"];
 export const LEAD_LANGS = ["fr", "en", "de", "es", "it", "pt"];
+/** Les configurateurs du site qui savent décrire ce qu'ils ont composé. */
+export const LEAD_CONFIGURATEUR_GAMMES = ["tente", "mobilier", "lounge"];
 /**
  * Longueurs maximales, en OCTETS UTF-8 — l'unité de MySQL, pas celle de
  * JavaScript. « Saint-Étienne » fait 14 caractères et 15 octets : borner en
@@ -87,6 +89,49 @@ const octets = (v) => {
 };
 /** Une chaîne bornée en OCTETS, pas en unités UTF-16. */
 const texteBorne = (max) => z.string().refine((v) => octets(v) <= max, { message: `dépasse ${max} octets` });
+/**
+ * ─── La composition d'un configurateur ─────────────────────────────────────
+ *
+ * Le visiteur qui a composé sa tente, son mobilier ou son lounge décrivait sa
+ * configuration en TEXTE, dans les notes. Le commercial la relisait pour la
+ * ressaisir en devis. Ce champ la fait voyager en DONNÉES, pour que le CRM
+ * fabrique le brouillon de devis lui-même.
+ *
+ * ⚠️ AUCUN PRIX ne circule ici, et c'est délibéré : le montant d'une ligne se
+ * lit dans le catalogue du CRM, à partir du `slug`. Un prix soumis par un
+ * formulaire public n'a rien à faire sur un devis — il serait dicté par le
+ * client. Le site n'envoie donc que QUOI et COMBIEN.
+ *
+ * `slug` = le `slugSite` du catalogue, l'identifiant que les deux applications
+ * partagent déjà : les configurateurs y lisent leurs prix, et les clés que
+ * fabrique `@hallucine/gonflable` (`cleTente`, `cleAuvent`…) SONT ces slugs.
+ */
+export const LEAD_CONFIGURATEUR_LIMITES = {
+    /** Un lounge chargé tient largement dessous ; au-delà c'est un robot. */
+    articles: 80,
+    slug: 100,
+    designation: 300,
+    precision: 300,
+    lien: 2000,
+};
+export const articleConfigureSchema = z.strictObject({
+    /** `slugSite` du catalogue CRM — c'est lui qui porte le prix et la référence. */
+    slug: texteBorne(LEAD_CONFIGURATEUR_LIMITES.slug),
+    quantite: z.number().int().positive().max(500),
+    /** Ce que le visiteur a lu à l'écran. Sert de désignation quand le slug ne se
+     *  résout pas au catalogue — la ligne existe alors quand même, à chiffrer. */
+    designation: texteBorne(LEAD_CONFIGURATEUR_LIMITES.designation).optional(),
+    /** Habillage, teinte, visuel : ce que l'atelier doit imprimer. */
+    precision: texteBorne(LEAD_CONFIGURATEUR_LIMITES.precision).optional(),
+});
+export const configurateurSchema = z.strictObject({
+    gamme: z.enum(LEAD_CONFIGURATEUR_GAMMES),
+    /** L'adresse qui rouvre SA scène en 3D (elle porte le code `?c=`). */
+    lien: texteBorne(LEAD_CONFIGURATEUR_LIMITES.lien).optional(),
+    /** La capture de sa scène, déjà déposée sur R2 par le site. */
+    apercuUrl: texteBorne(LEAD_CONFIGURATEUR_LIMITES.lien).optional(),
+    articles: z.array(articleConfigureSchema).max(LEAD_CONFIGURATEUR_LIMITES.articles),
+});
 const champsForme = {
     entreprise: z.string().trim().min(1).and(texteBorne(LEAD_LIMITES.entreprise)),
     prenom: texteBorne(LEAD_LIMITES.prenom).optional(),
@@ -106,6 +151,7 @@ const champsForme = {
     lang: z.enum(LEAD_LANGS),
     requestId: z.string().min(1).and(texteBorne(LEAD_LIMITES.requestId)),
     documentType: z.enum(LEAD_DOCUMENT_TYPES).optional(),
+    configurateur: configurateurSchema.optional(),
 };
 /**
  * Côté PRODUCTEUR (le site) : strict, bornes appliquées, avant l'envoi.

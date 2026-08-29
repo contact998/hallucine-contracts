@@ -34,6 +34,8 @@ export declare const LEADS_V1_PATH = "/api/integrations/v1/leads";
 export declare const LEAD_CONTACT_TYPES: readonly ["appel", "mail", "autre"];
 export declare const LEAD_DOCUMENT_TYPES: readonly ["brochure", "technique"];
 export declare const LEAD_LANGS: readonly ["fr", "en", "de", "es", "it", "pt"];
+/** Les configurateurs du site qui savent décrire ce qu'ils ont composé. */
+export declare const LEAD_CONFIGURATEUR_GAMMES: readonly ["tente", "mobilier", "lounge"];
 /**
  * Longueurs maximales, en OCTETS UTF-8 — l'unité de MySQL, pas celle de
  * JavaScript. « Saint-Étienne » fait 14 caractères et 15 octets : borner en
@@ -59,6 +61,54 @@ export declare const LEAD_LIMITES: {
      *  le CRM ajoute aux notes après réception. */
     readonly notes: 60000;
 };
+/**
+ * ─── La composition d'un configurateur ─────────────────────────────────────
+ *
+ * Le visiteur qui a composé sa tente, son mobilier ou son lounge décrivait sa
+ * configuration en TEXTE, dans les notes. Le commercial la relisait pour la
+ * ressaisir en devis. Ce champ la fait voyager en DONNÉES, pour que le CRM
+ * fabrique le brouillon de devis lui-même.
+ *
+ * ⚠️ AUCUN PRIX ne circule ici, et c'est délibéré : le montant d'une ligne se
+ * lit dans le catalogue du CRM, à partir du `slug`. Un prix soumis par un
+ * formulaire public n'a rien à faire sur un devis — il serait dicté par le
+ * client. Le site n'envoie donc que QUOI et COMBIEN.
+ *
+ * `slug` = le `slugSite` du catalogue, l'identifiant que les deux applications
+ * partagent déjà : les configurateurs y lisent leurs prix, et les clés que
+ * fabrique `@hallucine/gonflable` (`cleTente`, `cleAuvent`…) SONT ces slugs.
+ */
+export declare const LEAD_CONFIGURATEUR_LIMITES: {
+    /** Un lounge chargé tient largement dessous ; au-delà c'est un robot. */
+    readonly articles: 80;
+    readonly slug: 100;
+    readonly designation: 300;
+    readonly precision: 300;
+    readonly lien: 2000;
+};
+export declare const articleConfigureSchema: z.ZodObject<{
+    slug: z.ZodString;
+    quantite: z.ZodNumber;
+    designation: z.ZodOptional<z.ZodString>;
+    precision: z.ZodOptional<z.ZodString>;
+}, z.core.$strict>;
+export declare const configurateurSchema: z.ZodObject<{
+    gamme: z.ZodEnum<{
+        tente: "tente";
+        mobilier: "mobilier";
+        lounge: "lounge";
+    }>;
+    lien: z.ZodOptional<z.ZodString>;
+    apercuUrl: z.ZodOptional<z.ZodString>;
+    articles: z.ZodArray<z.ZodObject<{
+        slug: z.ZodString;
+        quantite: z.ZodNumber;
+        designation: z.ZodOptional<z.ZodString>;
+        precision: z.ZodOptional<z.ZodString>;
+    }, z.core.$strict>>;
+}, z.core.$strict>;
+export type ArticleConfigure = z.infer<typeof articleConfigureSchema>;
+export type ConfigurateurLead = z.infer<typeof configurateurSchema>;
 /**
  * Côté PRODUCTEUR (le site) : strict, bornes appliquées, avant l'envoi.
  * Un échec ici est un bug d'émetteur — à journaliser, jamais à transformer en
@@ -96,6 +146,21 @@ export declare const leadV1ProducteurSchema: z.ZodObject<{
         brochure: "brochure";
         technique: "technique";
     }>>;
+    configurateur: z.ZodOptional<z.ZodObject<{
+        gamme: z.ZodEnum<{
+            tente: "tente";
+            mobilier: "mobilier";
+            lounge: "lounge";
+        }>;
+        lien: z.ZodOptional<z.ZodString>;
+        apercuUrl: z.ZodOptional<z.ZodString>;
+        articles: z.ZodArray<z.ZodObject<{
+            slug: z.ZodString;
+            quantite: z.ZodNumber;
+            designation: z.ZodOptional<z.ZodString>;
+            precision: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+    }, z.core.$strict>>;
 }, z.core.$strict>;
 /**
  * Côté CONSOMMATEUR (le CRM) : la seule exigence de la route historique —
