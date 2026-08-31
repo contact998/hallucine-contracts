@@ -5,3 +5,7 @@ node_modules/
 # une installation imbriquée sans lockfile sur Railway (panne du 08/08/2026
 # sur @hallucine/tente : ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION).
 # Le test src/dist-a-jour.test.ts garantit que dist/ suit src/.
+
+# macOS pose ce marqueur dans les dossiers exclus de Spotlight — jamais une sortie de build.
+.metadata_never_index
+**/.metadata_never_index
