@@ -32,7 +32,7 @@ export declare const CATALOGUE_V1_PATH = "/api/public/v1/catalogue";
  * du CRM (Gate 14), figé là-bas par test — et un test CRM compare les deux
  * listes. `occasion` n'y entrera jamais.
  */
-export declare const CATALOGUE_V1_ROLES: readonly ["ecran_vente", "pack", "location", "tente_vente", "mobilier_vente"];
+export declare const CATALOGUE_V1_ROLES: readonly ["ecran_vente", "pack", "location", "tente_vente", "mobilier_vente", "projecteur_vente"];
 export type CatalogueRoleV1 = (typeof CATALOGUE_V1_ROLES)[number];
 /** L'URL complète pour un rôle — le nom du paramètre appartient au contrat. */
 export declare function urlCatalogueV1(base: string, role: CatalogueRoleV1): string;
@@ -267,6 +267,7 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
         location: "location";
         tente_vente: "tente_vente";
         mobilier_vente: "mobilier_vente";
+        projecteur_vente: "projecteur_vente";
     }>;
     generatedAt: z.ZodString;
     digest: z.ZodString;

@@ -41,6 +41,7 @@ export const CATALOGUE_V1_ROLES = [
   "location",
   "tente_vente",
   "mobilier_vente",
+  "projecteur_vente",
 ] as const;
 export type CatalogueRoleV1 = (typeof CATALOGUE_V1_ROLES)[number];
 

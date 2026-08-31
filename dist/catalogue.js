@@ -38,6 +38,7 @@ export const CATALOGUE_V1_ROLES = [
     "location",
     "tente_vente",
     "mobilier_vente",
+    "projecteur_vente",
 ];
 /** L'URL complète pour un rôle — le nom du paramètre appartient au contrat. */
 export function urlCatalogueV1(base, role) {
