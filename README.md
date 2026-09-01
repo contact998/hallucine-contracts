@@ -22,6 +22,18 @@ qui circule, des deux côtés.
 
 ## Contrats
 
+Le producteur valide **strict** avant d'émettre, le consommateur lit **tolérant**.
+Toute nouvelle route publique s'ajoute ici — c'est la carte de la frontière.
+
 | Contrat | Version | Producteur | Consommateur |
 |---|---|---|---|
 | `media` (GET `/api/public/v1/media`) | 1 | CRM `server/publicApiMedia.ts` | site `server/mediaCrmService.ts` |
+| `catalogue` (GET `/api/public/v1/catalogue?role=…`) | 1 | CRM `server/publicApiCatalogue.ts` | site `server/ecransTarifService.ts` |
+| `solutions` (GET `/api/public/v1/solutions`) | 1 | CRM `server/publicApiSolutions.ts` | site `server/solutionsService.ts` |
+| `leads` (POST `/api/integrations/v1/leads`) | 1 | site `server/crmWebhook.ts` | CRM `server/leadRoutes.ts` |
+
+> **`leads` inverse les rôles.** Sur `media`, `catalogue` et `solutions` le CRM
+> produit et le site consomme. Un lead va dans l'autre sens : le **site** est le
+> producteur (schéma strict, `leadV1ProducteurSchema`, avant envoi), le **CRM**
+> le consommateur (schéma tolérant, `leadV1ConsommateurSchema`) — un lead refusé
+> est un client perdu, la tolérance y est vitale.
