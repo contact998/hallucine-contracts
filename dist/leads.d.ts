@@ -57,6 +57,7 @@ export declare const LEAD_LIMITES: {
     readonly pays: 100;
     readonly lang: 10;
     readonly requestId: 64;
+    readonly documentSlug: 100;
     /** TEXT MySQL = 65 535 OCTETS. Marge gardée pour la ligne « Source » que
      *  le CRM ajoute aux notes après réception. */
     readonly notes: 60000;
@@ -146,6 +147,7 @@ export declare const leadV1ProducteurSchema: z.ZodObject<{
         brochure: "brochure";
         technique: "technique";
     }>>;
+    documentSlug: z.ZodOptional<z.ZodString>;
     configurateur: z.ZodOptional<z.ZodObject<{
         gamme: z.ZodEnum<{
             tente: "tente";

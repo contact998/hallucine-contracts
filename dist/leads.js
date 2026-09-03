@@ -57,6 +57,7 @@ export const LEAD_LIMITES = {
     pays: 100,
     lang: 10,
     requestId: 64,
+    documentSlug: 100,
     /** TEXT MySQL = 65 535 OCTETS. Marge gardée pour la ligne « Source » que
      *  le CRM ajoute aux notes après réception. */
     notes: 60000,
@@ -151,6 +152,15 @@ const champsForme = {
     lang: z.enum(LEAD_LANGS),
     requestId: z.string().min(1).and(texteBorne(LEAD_LIMITES.requestId)),
     documentType: z.enum(LEAD_DOCUMENT_TYPES).optional(),
+    /**
+     * QUEL document a été téléchargé — le slug stable de la brochure
+     * (« ecran-etanche »), jamais son titre affiché, qui est traduit dans la
+     * langue du visiteur. `documentType` dit la NATURE (brochure ou technique)
+     * et choisit la réponse automatique ; ce champ dit le PRODUIT, et c'est lui
+     * qui permet au CRM de préparer un devis. Le CRM ignore un slug qu'il ne
+     * connaît pas : ce n'est jamais un lead refusé.
+     */
+    documentSlug: texteBorne(LEAD_LIMITES.documentSlug).optional(),
     configurateur: configurateurSchema.optional(),
 };
 /**

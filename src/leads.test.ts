@@ -43,8 +43,14 @@ describe("producteur (le site) — strict avant l'envoi", () => {
         lang: "de",
         requestId: "abc",
         documentType: "brochure",
+        documentSlug: "ecran-etanche",
       }).success,
     ).toBe(true);
+  });
+
+  it("borne le slug du document — un code court, pas un titre", () => {
+    expect(leadV1ProducteurSchema.safeParse({ ...lead, documentSlug: "ecran-etanche" }).success).toBe(true);
+    expect(leadV1ProducteurSchema.safeParse({ ...lead, documentSlug: "x".repeat(LEAD_LIMITES.documentSlug + 1) }).success).toBe(false);
   });
 
   it("exige entreprise, lang et requestId — les trois que l'émetteur garantit", () => {
