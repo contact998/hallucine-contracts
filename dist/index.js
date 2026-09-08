@@ -2,3 +2,4 @@ export { MEDIA_CONTRACT_VERSION, MEDIA_V1_PATH, mediaItemV1Schema, mediaItemV1St
 export * from "./catalogue.js";
 export * from "./leads.js";
 export * from "./solutions.js";
+export * from "./coordonnees.js";

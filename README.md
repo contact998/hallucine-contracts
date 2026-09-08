@@ -31,6 +31,7 @@ Toute nouvelle route publique s'ajoute ici — c'est la carte de la frontière.
 | `catalogue` (GET `/api/public/v1/catalogue?role=…`) | 1 | CRM `server/publicApiCatalogue.ts` | site `server/ecransTarifService.ts` |
 | `solutions` (GET `/api/public/v1/solutions`) | 1 | CRM `server/publicApiSolutions.ts` | site `server/solutionsService.ts` |
 | `leads` (POST `/api/integrations/v1/leads`) | 1 | site `server/crmWebhook.ts` | CRM `server/leadRoutes.ts` |
+| `coordonnees` (GET `/api/public/v1/coordonnees`) | 1 | CRM `server/publicApiCoordonnees.ts` | site `server/coordonneesService.ts` |
 
 > **`leads` inverse les rôles.** Sur `media`, `catalogue` et `solutions` le CRM
 > produit et le site consomme. Un lead va dans l'autre sens : le **site** est le
