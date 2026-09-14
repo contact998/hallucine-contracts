@@ -39,7 +39,7 @@ export const LEAD_DOCUMENT_TYPES = ["brochure", "technique"] as const;
 export const LEAD_LANGS = ["fr", "en", "de", "es", "it", "pt"] as const;
 
 /** Les configurateurs du site qui savent décrire ce qu'ils ont composé. */
-export const LEAD_CONFIGURATEUR_GAMMES = ["tente", "mobilier", "lounge"] as const;
+export const LEAD_CONFIGURATEUR_GAMMES = ["tente", "mobilier", "lounge", "ecran"] as const;
 
 /**
  * Longueurs maximales, en OCTETS UTF-8 — l'unité de MySQL, pas celle de
