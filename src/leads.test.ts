@@ -175,7 +175,7 @@ describe("la composition d'un configurateur", () => {
   });
 
   it("borne la quantité, la liste et la gamme", () => {
-    expect(configurateurSchema.safeParse({ ...compo, gamme: "ecran" }).success).toBe(false);
+    expect(configurateurSchema.safeParse({ ...compo, gamme: "arche" }).success).toBe(false);
     expect(configurateurSchema.safeParse({
       gamme: "tente",
       articles: [{ slug: "x", quantite: 0 }],
@@ -189,4 +189,8 @@ describe("la composition d'un configurateur", () => {
   it("laisse passer une composition sans article — le CRM décidera", () => {
     expect(configurateurSchema.safeParse({ gamme: "mobilier", articles: [] }).success).toBe(true);
   });
+});
+
+it("accepte un écran configuré sans prix fourni par le visiteur", () => {
+  expect(configurateurSchema.safeParse({ gamme: "ecran", articles: [{slug: "ecran-soufflerie-9m", quantite: 1}] }).success).toBe(true);
 });
