@@ -194,3 +194,13 @@ describe("la composition d'un configurateur", () => {
 it("accepte un écran configuré sans prix fourni par le visiteur", () => {
   expect(configurateurSchema.safeParse({ gamme: "ecran", articles: [{slug: "ecran-soufflerie-9m", quantite: 1}] }).success).toBe(true);
 });
+
+describe("configuration visuelle opaque dans le lead", () => {
+  it("conserve le JSON exact sans interpréter ses propriétés", () => {
+    const configuration3d = JSON.stringify({ version: 1, gamme: "tente", viewer: { couleurs: { toit: "bleu" } } });
+    expect(configurateurSchema.parse({ gamme: "tente", articles: [], configuration3d })).toMatchObject({ configuration3d });
+  });
+  it("refuse un JSON dépassant 750 ko", () => {
+    expect(configurateurSchema.safeParse({ gamme: "tente", articles: [], configuration3d: "x".repeat(750001) }).success).toBe(false);
+  });
+});

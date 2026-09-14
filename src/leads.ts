@@ -120,6 +120,7 @@ export const LEAD_CONFIGURATEUR_LIMITES = {
   designation: 300,
   precision: 300,
   lien: 2000,
+  configuration3d: 750_000,
 } as const;
 
 export const articleConfigureSchema = z.strictObject({
@@ -139,6 +140,8 @@ export const configurateurSchema = z.strictObject({
   lien: texteBorne(LEAD_CONFIGURATEUR_LIMITES.lien).optional(),
   /** La capture de sa scène, déjà déposée sur R2 par le site. */
   apercuUrl: texteBorne(LEAD_CONFIGURATEUR_LIMITES.lien).optional(),
+  /** Instantané de rendu opaque : validation métier et import des assets par le CRM. */
+  configuration3d: texteBorne(LEAD_CONFIGURATEUR_LIMITES.configuration3d).optional(),
   articles: z.array(articleConfigureSchema).max(LEAD_CONFIGURATEUR_LIMITES.articles),
 });
 
