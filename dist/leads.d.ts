@@ -86,6 +86,7 @@ export declare const LEAD_CONFIGURATEUR_LIMITES: {
     readonly designation: 300;
     readonly precision: 300;
     readonly lien: 2000;
+    readonly configuration3d: 750000;
 };
 export declare const articleConfigureSchema: z.ZodObject<{
     slug: z.ZodString;
@@ -102,6 +103,7 @@ export declare const configurateurSchema: z.ZodObject<{
     }>;
     lien: z.ZodOptional<z.ZodString>;
     apercuUrl: z.ZodOptional<z.ZodString>;
+    configuration3d: z.ZodOptional<z.ZodString>;
     articles: z.ZodArray<z.ZodObject<{
         slug: z.ZodString;
         quantite: z.ZodNumber;
@@ -158,6 +160,7 @@ export declare const leadV1ProducteurSchema: z.ZodObject<{
         }>;
         lien: z.ZodOptional<z.ZodString>;
         apercuUrl: z.ZodOptional<z.ZodString>;
+        configuration3d: z.ZodOptional<z.ZodString>;
         articles: z.ZodArray<z.ZodObject<{
             slug: z.ZodString;
             quantite: z.ZodNumber;
