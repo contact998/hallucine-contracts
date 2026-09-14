@@ -39,6 +39,12 @@ export const CATALOGUE_V1_ROLES = [
     "tente_vente",
     "mobilier_vente",
     "projecteur_vente",
+    /* Arches gonflables (14/09/2026) : la gamme vivait en dur dans une page du
+       site, onze références recopiées de l'ancien site Wix, sans fiche CRM
+       derrière. Elle passe par le catalogue comme les autres — même DTO, les
+       cotes voyagent dans `specs` (largeurCm / hauteurCm / profondeurCm), comme
+       le mobilier. */
+    "arche_vente",
 ];
 /** L'URL complète pour un rôle — le nom du paramètre appartient au contrat. */
 export function urlCatalogueV1(base, role) {
