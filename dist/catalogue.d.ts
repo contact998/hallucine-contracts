@@ -36,6 +36,9 @@ export declare const CATALOGUE_V1_ROLES: readonly ["ecran_vente", "pack", "locat
 export type CatalogueRoleV1 = (typeof CATALOGUE_V1_ROLES)[number];
 /** L'URL complète pour un rôle — le nom du paramètre appartient au contrat. */
 export declare function urlCatalogueV1(base: string, role: CatalogueRoleV1): string;
+/** Les formes d'arche gonflable, dans l'ordre où le site les présente. */
+export declare const ARCHE_FORMES_V1: readonly ["droite", "pieds", "ronde", "demi", "soufflerie"];
+export type ArcheFormeV1 = (typeof ARCHE_FORMES_V1)[number];
 export declare const catalogueSpecsV1Schema: z.ZodObject<{
     tailleHorsTout: z.ZodNullable<z.ZodString>;
     toile: z.ZodNullable<z.ZodString>;
@@ -52,6 +55,14 @@ export declare const catalogueSpecsV1Schema: z.ZodObject<{
     hauteurCm: z.ZodNullable<z.ZodNumber>;
     placesAssises: z.ZodNullable<z.ZodNumber>;
     hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
+    forme: z.ZodNullable<z.ZodEnum<{
+        droite: "droite";
+        pieds: "pieds";
+        ronde: "ronde";
+        demi: "demi";
+        soufflerie: "soufflerie";
+    }>>;
+    hauteurPiedsCm: z.ZodNullable<z.ZodNumber>;
 }, z.core.$strip>;
 export declare const catalogueSpecsV1StrictSchema: z.ZodObject<{
     tailleHorsTout: z.ZodNullable<z.ZodString>;
@@ -69,6 +80,14 @@ export declare const catalogueSpecsV1StrictSchema: z.ZodObject<{
     hauteurCm: z.ZodNullable<z.ZodNumber>;
     placesAssises: z.ZodNullable<z.ZodNumber>;
     hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
+    forme: z.ZodNullable<z.ZodEnum<{
+        droite: "droite";
+        pieds: "pieds";
+        ronde: "ronde";
+        demi: "demi";
+        soufflerie: "soufflerie";
+    }>>;
+    hauteurPiedsCm: z.ZodNullable<z.ZodNumber>;
 }, z.core.$strict>;
 export type CatalogueSpecsV1 = z.infer<typeof catalogueSpecsV1Schema>;
 export declare const catalogueCaracteristiqueV1Schema: z.ZodObject<{
@@ -102,6 +121,14 @@ export declare const catalogueItemV1Schema: z.ZodObject<{
         hauteurCm: z.ZodNullable<z.ZodNumber>;
         placesAssises: z.ZodNullable<z.ZodNumber>;
         hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
+        forme: z.ZodNullable<z.ZodEnum<{
+            droite: "droite";
+            pieds: "pieds";
+            ronde: "ronde";
+            demi: "demi";
+            soufflerie: "soufflerie";
+        }>>;
+        hauteurPiedsCm: z.ZodNullable<z.ZodNumber>;
     }, z.core.$strip>>;
     caracteristiques: z.ZodArray<z.ZodObject<{
         libelle: z.ZodString;
@@ -147,6 +174,14 @@ export declare const catalogueItemV1StrictSchema: z.ZodObject<{
         hauteurCm: z.ZodNullable<z.ZodNumber>;
         placesAssises: z.ZodNullable<z.ZodNumber>;
         hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
+        forme: z.ZodNullable<z.ZodEnum<{
+            droite: "droite";
+            pieds: "pieds";
+            ronde: "ronde";
+            demi: "demi";
+            soufflerie: "soufflerie";
+        }>>;
+        hauteurPiedsCm: z.ZodNullable<z.ZodNumber>;
     }, z.core.$strip>>;
     caracteristiques: z.ZodArray<z.ZodObject<{
         libelle: z.ZodString;
@@ -197,6 +232,14 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             hauteurCm: z.ZodNullable<z.ZodNumber>;
             placesAssises: z.ZodNullable<z.ZodNumber>;
             hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
+            forme: z.ZodNullable<z.ZodEnum<{
+                droite: "droite";
+                pieds: "pieds";
+                ronde: "ronde";
+                demi: "demi";
+                soufflerie: "soufflerie";
+            }>>;
+            hauteurPiedsCm: z.ZodNullable<z.ZodNumber>;
         }, z.core.$strip>>;
         caracteristiques: z.ZodArray<z.ZodObject<{
             libelle: z.ZodString;
@@ -240,6 +283,14 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             hauteurCm: z.ZodNullable<z.ZodNumber>;
             placesAssises: z.ZodNullable<z.ZodNumber>;
             hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
+            forme: z.ZodNullable<z.ZodEnum<{
+                droite: "droite";
+                pieds: "pieds";
+                ronde: "ronde";
+                demi: "demi";
+                soufflerie: "soufflerie";
+            }>>;
+            hauteurPiedsCm: z.ZodNullable<z.ZodNumber>;
         }, z.core.$strip>>;
         caracteristiques: z.ZodArray<z.ZodObject<{
             libelle: z.ZodString;
@@ -298,6 +349,14 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             hauteurCm: z.ZodNullable<z.ZodNumber>;
             placesAssises: z.ZodNullable<z.ZodNumber>;
             hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
+            forme: z.ZodNullable<z.ZodEnum<{
+                droite: "droite";
+                pieds: "pieds";
+                ronde: "ronde";
+                demi: "demi";
+                soufflerie: "soufflerie";
+            }>>;
+            hauteurPiedsCm: z.ZodNullable<z.ZodNumber>;
         }, z.core.$strip>>;
         caracteristiques: z.ZodArray<z.ZodObject<{
             libelle: z.ZodString;
@@ -341,6 +400,14 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             hauteurCm: z.ZodNullable<z.ZodNumber>;
             placesAssises: z.ZodNullable<z.ZodNumber>;
             hauteurAssiseCm: z.ZodNullable<z.ZodNumber>;
+            forme: z.ZodNullable<z.ZodEnum<{
+                droite: "droite";
+                pieds: "pieds";
+                ronde: "ronde";
+                demi: "demi";
+                soufflerie: "soufflerie";
+            }>>;
+            hauteurPiedsCm: z.ZodNullable<z.ZodNumber>;
         }, z.core.$strip>>;
         caracteristiques: z.ZodArray<z.ZodObject<{
             libelle: z.ZodString;

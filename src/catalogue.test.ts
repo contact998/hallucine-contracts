@@ -5,6 +5,7 @@
  */
 import { describe, expect, it } from "vitest";
 import {
+  ARCHE_FORMES_V1,
   CATALOGUE_CONTRACT_VERSION,
   CATALOGUE_V1_PATH,
   CATALOGUE_V1_ROLES,
@@ -27,6 +28,7 @@ const specs = {
   garantieAns: 5,
   driveIn: false,
   largeurCm: null, profondeurCm: null, hauteurCm: null, placesAssises: null, hauteurAssiseCm: null,
+  forme: null, hauteurPiedsCm: null,
 };
 
 const item = {
@@ -142,6 +144,13 @@ describe("producteur (strict)", () => {
       largeurCm: 200, profondeurCm: 80, hauteurCm: 85, placesAssises: 2,
     };
     expect(catalogueItemV1StrictSchema.safeParse({ ...item, specs: specsMobilier }).success).toBe(true);
+  });
+
+  it("accepte la forme d'une arche et la hauteur de ses pieds, refuse une forme inconnue", () => {
+    const specsArche = { ...specs, largeurCm: 400, hauteurCm: 260, profondeurCm: 45, forme: "pieds", hauteurPiedsCm: 140 };
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, specs: specsArche }).success).toBe(true);
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, specs: { ...specsArche, forme: "hexagonale" } }).success).toBe(false);
+    expect(ARCHE_FORMES_V1).toEqual(["droite", "pieds", "ronde", "demi", "soufflerie"]);
   });
 
   it("exige les quatre clés d'encombrement, même à null (contrat en présence)", () => {
