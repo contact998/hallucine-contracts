@@ -175,7 +175,7 @@ describe("la composition d'un configurateur", () => {
   });
 
   it("borne la quantité, la liste et la gamme", () => {
-    expect(configurateurSchema.safeParse({ ...compo, gamme: "arche" }).success).toBe(false);
+    expect(configurateurSchema.safeParse({ ...compo, gamme: "portique" }).success).toBe(false);
     expect(configurateurSchema.safeParse({
       gamme: "tente",
       articles: [{ slug: "x", quantite: 0 }],
@@ -193,6 +193,7 @@ describe("la composition d'un configurateur", () => {
 
 it("accepte un écran configuré sans prix fourni par le visiteur", () => {
   expect(configurateurSchema.safeParse({ gamme: "ecran", articles: [{slug: "ecran-soufflerie-9m", quantite: 1}] }).success).toBe(true);
+  expect(configurateurSchema.safeParse({ gamme: "arche", articles: [{slug: "arche-pieds-4m-2-6m-45cm", quantite: 1, designation: "Arche à pieds 4 m"}] }).success).toBe(true);
 });
 
 describe("configuration visuelle opaque dans le lead", () => {
