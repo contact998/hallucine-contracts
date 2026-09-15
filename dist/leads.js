@@ -35,7 +35,9 @@ export const LEAD_CONTACT_TYPES = ["appel", "mail", "autre"];
 export const LEAD_DOCUMENT_TYPES = ["brochure", "technique"];
 export const LEAD_LANGS = ["fr", "en", "de", "es", "it", "pt"];
 /** Les configurateurs du site qui savent décrire ce qu'ils ont composé. */
-export const LEAD_CONFIGURATEUR_GAMMES = ["tente", "mobilier", "lounge", "ecran"];
+/* « arche » (16/09/2026) : la page arches du site laisse choisir une référence
+   et l'envoie en données — un slug, une quantité — comme l'écran depuis v0.14.0. */
+export const LEAD_CONFIGURATEUR_GAMMES = ["tente", "mobilier", "lounge", "ecran", "arche"];
 /**
  * Longueurs maximales, en OCTETS UTF-8 — l'unité de MySQL, pas celle de
  * JavaScript. « Saint-Étienne » fait 14 caractères et 15 octets : borner en

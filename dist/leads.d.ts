@@ -35,7 +35,7 @@ export declare const LEAD_CONTACT_TYPES: readonly ["appel", "mail", "autre"];
 export declare const LEAD_DOCUMENT_TYPES: readonly ["brochure", "technique"];
 export declare const LEAD_LANGS: readonly ["fr", "en", "de", "es", "it", "pt"];
 /** Les configurateurs du site qui savent décrire ce qu'ils ont composé. */
-export declare const LEAD_CONFIGURATEUR_GAMMES: readonly ["tente", "mobilier", "lounge", "ecran"];
+export declare const LEAD_CONFIGURATEUR_GAMMES: readonly ["tente", "mobilier", "lounge", "ecran", "arche"];
 /**
  * Longueurs maximales, en OCTETS UTF-8 — l'unité de MySQL, pas celle de
  * JavaScript. « Saint-Étienne » fait 14 caractères et 15 octets : borner en
@@ -100,6 +100,7 @@ export declare const configurateurSchema: z.ZodObject<{
         mobilier: "mobilier";
         lounge: "lounge";
         ecran: "ecran";
+        arche: "arche";
     }>;
     lien: z.ZodOptional<z.ZodString>;
     apercuUrl: z.ZodOptional<z.ZodString>;
@@ -157,6 +158,7 @@ export declare const leadV1ProducteurSchema: z.ZodObject<{
             mobilier: "mobilier";
             lounge: "lounge";
             ecran: "ecran";
+            arche: "arche";
         }>;
         lien: z.ZodOptional<z.ZodString>;
         apercuUrl: z.ZodOptional<z.ZodString>;
