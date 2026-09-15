@@ -58,6 +58,10 @@ export function urlCatalogueV1(base: string, role: CatalogueRoleV1): string {
 
 // ─── Les specs (écrans) — objet imbriqué, strict en profondeur ─────────────
 
+/** Les formes d'arche gonflable, dans l'ordre où le site les présente. */
+export const ARCHE_FORMES_V1 = ["droite", "pieds", "ronde", "demi", "soufflerie"] as const;
+export type ArcheFormeV1 = (typeof ARCHE_FORMES_V1)[number];
+
 const specsForme = {
   tailleHorsTout: z.string().nullable(),
   toile: z.string().nullable(),
@@ -80,6 +84,14 @@ const specsForme = {
      de 70 cm ne s'assoient pas à la même hauteur, et une valeur unique faisait
      flotter les uns et enfoncer les autres. Null sur ce qui ne s'assoit pas. */
   hauteurAssiseCm: z.number().nullable(),
+  /* Arches gonflables (15/09/2026) : la FORME de l'arche — Bayes en vend cinq,
+     et deux d'entre elles (droite à angles droits ou à pans coupés, même prix)
+     partagent code et cotes. Le site regroupe la gamme par forme ; il ne doit
+     ni la deviner d'une référence ni la lire dans un slug. Null hors arches. */
+  forme: z.enum(ARCHE_FORMES_V1).nullable(),
+  /* Hauteur du cadre de pieds (cm) des arches « à pieds » — la 4ᵉ cote de la
+     référence Bayes. Null sur toutes les autres formes, et hors arches. */
+  hauteurPiedsCm: z.number().nullable(),
 };
 
 export const catalogueSpecsV1Schema = z.object(specsForme);
