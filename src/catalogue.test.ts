@@ -177,6 +177,42 @@ describe("producteur (strict)", () => {
   });
 });
 
+describe("inclusDetail — ce qui est livré avec (v0.18.0)", () => {
+  const livreAvec = [
+    {
+      designation: "Pompe à air électrique 1200 W",
+      designations: { en: "1,200-watt Electric Air Pump", de: "Elektrische Luftpumpe 1200 W" },
+      quantite: 1,
+    },
+    { designation: "Sac de transport sur-mesure", quantite: 1 },
+    { designation: "Corde (au mètre)", quantite: 40, unite: "m" },
+  ];
+
+  it("se lit des deux côtés, et son absence n'écarte pas l'item (CRM pas encore à jour)", () => {
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, inclusDetail: livreAvec }).success).toBe(true);
+    expect(catalogueItemV1Schema.safeParse({ ...item, inclusDetail: livreAvec }).success).toBe(true);
+    expect(catalogueItemV1Schema.safeParse(item).success).toBe(true);
+    expect(catalogueItemV1StrictSchema.safeParse({ ...pack, inclusDetail: [] }).success).toBe(true);
+  });
+
+  it("REFUSE un prix, un coût ou une référence dans une ligne — strict jusqu'aux feuilles", () => {
+    for (const fuite of [{ prixHT: 38 }, { prixAchatEur: 31 }, { reference: "BAYES-SAC" }, { fournisseurId: 2340350 }]) {
+      const ligne = { ...livreAvec[1], ...fuite };
+      expect(catalogueItemV1StrictSchema.safeParse({ ...item, inclusDetail: [ligne] }).success).toBe(false);
+    }
+  });
+
+  it("refuse une quantité nulle ou négative — une ligne sans objet n'est pas livrée", () => {
+    expect(
+      catalogueItemV1StrictSchema.safeParse({ ...item, inclusDetail: [{ designation: "Pompe", quantite: 0 }] }).success,
+    ).toBe(false);
+  });
+
+  it("laisse `inclus` tel qu'il est : une liste de textes, lue par le site en production", () => {
+    expect(catalogueItemV1Schema.safeParse({ ...item, inclus: livreAvec }).success).toBe(false);
+  });
+});
+
 describe("version", () => {
   it("est la 1", () => {
     expect(CATALOGUE_CONTRACT_VERSION).toBe(1);

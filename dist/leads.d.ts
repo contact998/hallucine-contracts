@@ -21,8 +21,9 @@
  * risque au flux le plus précieux pour un bénéfice de symétrie.
  *
  * Les NOTES restent du texte libre : le CRM y détecte des marqueurs
- * (« Téléchargement document site », « Configuration tente X ») pour choisir
- * le modèle d'email automatique. Ce protocole n'est PAS restructuré par ce
+ * (« Téléchargement document site », « Configuration tente X » — et depuis
+ * v0.18.0 le vrai modèle : « Configuration tente Spider », « … N », « … V »)
+ * pour choisir le modèle d'email automatique. Ce protocole n'est PAS restructuré par ce
  * contrat — le restructurer sans migrer les détections casserait le routage
  * des emails.
  */
@@ -87,6 +88,9 @@ export declare const LEAD_CONFIGURATEUR_LIMITES: {
     readonly precision: 300;
     readonly lien: 2000;
     readonly configuration3d: 750000;
+    /** Compositions d'une demande groupée (voir `panier`). Dix configurateurs
+     *  remplis par un seul visiteur, c'est déjà un salon entier. */
+    readonly panier: 10;
 };
 export declare const articleConfigureSchema: z.ZodObject<{
     slug: z.ZodString;
@@ -114,6 +118,48 @@ export declare const configurateurSchema: z.ZodObject<{
 }, z.core.$strict>;
 export type ArticleConfigure = z.infer<typeof articleConfigureSchema>;
 export type ConfigurateurLead = z.infer<typeof configurateurSchema>;
+/**
+ * ─── La demande groupée (v0.18.0) ──────────────────────────────────────────
+ *
+ * Le visiteur compose plusieurs produits — un écran, une tente, du mobilier,
+ * une arche — dans PLUSIEURS configurateurs, puis envoie UNE seule demande.
+ * `panier` porte ces compositions, chacune dans la forme exacte d'un
+ * `configurateur` : sa gamme, ses articles, son lien de reprise 3D, sa capture.
+ * Le CRM les assemble dans UN SEUL devis brouillon, chacune selon les règles de
+ * sa gamme (une tente reste un produit composé, un écran une ligne catalogue).
+ *
+ * `configurateur` RESTE, et les deux se combinent ainsi :
+ *
+ *   - une composition seule : `configurateur`, comme avant v0.18.0 ;
+ *   - plusieurs : `panier`, et `configurateur` peut être absent ;
+ *   - les deux : `configurateur` est alors l'une des compositions du panier,
+ *     recopiée pour un CRM qui ne lit pas encore `panier` (il l'ignore, sans
+ *     erreur — le schéma consommateur garde les clés inconnues). Le CRM qui le
+ *     lit écarte la copie IDENTIQUE : une composition n'est jamais chiffrée
+ *     deux fois.
+ *
+ * Même règle que pour une composition seule : AUCUN prix, seulement QUOI et
+ * COMBIEN — les montants se lisent au catalogue du CRM.
+ */
+export declare const panierSchema: z.ZodArray<z.ZodObject<{
+    gamme: z.ZodEnum<{
+        tente: "tente";
+        mobilier: "mobilier";
+        lounge: "lounge";
+        ecran: "ecran";
+        arche: "arche";
+    }>;
+    lien: z.ZodOptional<z.ZodString>;
+    apercuUrl: z.ZodOptional<z.ZodString>;
+    configuration3d: z.ZodOptional<z.ZodString>;
+    articles: z.ZodArray<z.ZodObject<{
+        slug: z.ZodString;
+        quantite: z.ZodNumber;
+        designation: z.ZodOptional<z.ZodString>;
+        precision: z.ZodOptional<z.ZodString>;
+    }, z.core.$strict>>;
+}, z.core.$strict>>;
+export type PanierLead = z.infer<typeof panierSchema>;
 /**
  * Côté PRODUCTEUR (le site) : strict, bornes appliquées, avant l'envoi.
  * Un échec ici est un bug d'émetteur — à journaliser, jamais à transformer en
@@ -170,6 +216,24 @@ export declare const leadV1ProducteurSchema: z.ZodObject<{
             precision: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>>;
     }, z.core.$strict>>;
+    panier: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        gamme: z.ZodEnum<{
+            tente: "tente";
+            mobilier: "mobilier";
+            lounge: "lounge";
+            ecran: "ecran";
+            arche: "arche";
+        }>;
+        lien: z.ZodOptional<z.ZodString>;
+        apercuUrl: z.ZodOptional<z.ZodString>;
+        configuration3d: z.ZodOptional<z.ZodString>;
+        articles: z.ZodArray<z.ZodObject<{
+            slug: z.ZodString;
+            quantite: z.ZodNumber;
+            designation: z.ZodOptional<z.ZodString>;
+            precision: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+    }, z.core.$strict>>>;
 }, z.core.$strict>;
 /**
  * Côté CONSOMMATEUR (le CRM) : la seule exigence de la route historique —

@@ -21,8 +21,9 @@
  * risque au flux le plus précieux pour un bénéfice de symétrie.
  *
  * Les NOTES restent du texte libre : le CRM y détecte des marqueurs
- * (« Téléchargement document site », « Configuration tente X ») pour choisir
- * le modèle d'email automatique. Ce protocole n'est PAS restructuré par ce
+ * (« Téléchargement document site », « Configuration tente X » — et depuis
+ * v0.18.0 le vrai modèle : « Configuration tente Spider », « … N », « … V »)
+ * pour choisir le modèle d'email automatique. Ce protocole n'est PAS restructuré par ce
  * contrat — le restructurer sans migrer les détections casserait le routage
  * des emails.
  */
@@ -123,6 +124,9 @@ export const LEAD_CONFIGURATEUR_LIMITES = {
   precision: 300,
   lien: 2000,
   configuration3d: 750_000,
+  /** Compositions d'une demande groupée (voir `panier`). Dix configurateurs
+   *  remplis par un seul visiteur, c'est déjà un salon entier. */
+  panier: 10,
 } as const;
 
 export const articleConfigureSchema = z.strictObject({
@@ -149,6 +153,32 @@ export const configurateurSchema = z.strictObject({
 
 export type ArticleConfigure = z.infer<typeof articleConfigureSchema>;
 export type ConfigurateurLead = z.infer<typeof configurateurSchema>;
+
+/**
+ * ─── La demande groupée (v0.18.0) ──────────────────────────────────────────
+ *
+ * Le visiteur compose plusieurs produits — un écran, une tente, du mobilier,
+ * une arche — dans PLUSIEURS configurateurs, puis envoie UNE seule demande.
+ * `panier` porte ces compositions, chacune dans la forme exacte d'un
+ * `configurateur` : sa gamme, ses articles, son lien de reprise 3D, sa capture.
+ * Le CRM les assemble dans UN SEUL devis brouillon, chacune selon les règles de
+ * sa gamme (une tente reste un produit composé, un écran une ligne catalogue).
+ *
+ * `configurateur` RESTE, et les deux se combinent ainsi :
+ *
+ *   - une composition seule : `configurateur`, comme avant v0.18.0 ;
+ *   - plusieurs : `panier`, et `configurateur` peut être absent ;
+ *   - les deux : `configurateur` est alors l'une des compositions du panier,
+ *     recopiée pour un CRM qui ne lit pas encore `panier` (il l'ignore, sans
+ *     erreur — le schéma consommateur garde les clés inconnues). Le CRM qui le
+ *     lit écarte la copie IDENTIQUE : une composition n'est jamais chiffrée
+ *     deux fois.
+ *
+ * Même règle que pour une composition seule : AUCUN prix, seulement QUOI et
+ * COMBIEN — les montants se lisent au catalogue du CRM.
+ */
+export const panierSchema = z.array(configurateurSchema).max(LEAD_CONFIGURATEUR_LIMITES.panier);
+export type PanierLead = z.infer<typeof panierSchema>;
 
 const champsForme = {
   entreprise: z.string().trim().min(1).and(texteBorne(LEAD_LIMITES.entreprise)),
@@ -179,6 +209,8 @@ const champsForme = {
    */
   documentSlug: texteBorne(LEAD_LIMITES.documentSlug).optional(),
   configurateur: configurateurSchema.optional(),
+  /** Plusieurs compositions dans une seule demande — voir `panierSchema`. */
+  panier: panierSchema.optional(),
 };
 
 /**
