@@ -21,7 +21,8 @@
  * les seuls types déclarés : `slugSite` est null sur TOUS les packs et
  * locations, `designations` est {} sur les tentes, `specs` est null hors
  * écrans. Nullable partout, optional nulle part : la projection CRM écrit
- * toujours les 14 clés.
+ * toujours les 14 clés — une seule exception, `inclusDetail` (v0.18.0),
+ * optionnelle pour qu'un site à jour lise encore un CRM qui ne l'émet pas.
  */
 import { z } from "zod";
 export declare const CATALOGUE_CONTRACT_VERSION = 1;
@@ -94,6 +95,13 @@ export declare const catalogueCaracteristiqueV1Schema: z.ZodObject<{
     libelle: z.ZodString;
     valeur: z.ZodString;
 }, z.core.$strip>;
+export declare const catalogueInclusLigneV1Schema: z.ZodObject<{
+    designation: z.ZodString;
+    designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+    quantite: z.ZodNumber;
+    unite: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+export type CatalogueInclusLigneV1 = z.infer<typeof catalogueInclusLigneV1Schema>;
 /** Côté consommateur (site) : une clé inconnue est IGNORÉE, jamais une erreur. */
 export declare const catalogueItemV1Schema: z.ZodObject<{
     id: z.ZodNumber;
@@ -146,6 +154,17 @@ export declare const catalogueItemV1Schema: z.ZodObject<{
         valeur: z.ZodString;
     }, z.core.$strict>>>;
     inclusTrad: z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString>>;
+    inclusDetail: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        designation: z.ZodString;
+        designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+        quantite: z.ZodNumber;
+        unite: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip> | z.ZodObject<{
+        designation: z.ZodString;
+        designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+        quantite: z.ZodNumber;
+        unite: z.ZodOptional<z.ZodString>;
+    }, z.core.$strict>>>;
 }, z.core.$strip>;
 /** Côté producteur (CRM) : une clé de trop est un ÉCHEC — strict en profondeur. */
 export declare const catalogueItemV1StrictSchema: z.ZodObject<{
@@ -199,6 +218,17 @@ export declare const catalogueItemV1StrictSchema: z.ZodObject<{
         valeur: z.ZodString;
     }, z.core.$strict>>>;
     inclusTrad: z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString>>;
+    inclusDetail: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        designation: z.ZodString;
+        designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+        quantite: z.ZodNumber;
+        unite: z.ZodOptional<z.ZodString>;
+    }, z.core.$strip> | z.ZodObject<{
+        designation: z.ZodString;
+        designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+        quantite: z.ZodNumber;
+        unite: z.ZodOptional<z.ZodString>;
+    }, z.core.$strict>>>;
 }, z.core.$strict>;
 export type CatalogueItemV1 = z.infer<typeof catalogueItemV1Schema>;
 export declare const catalogueCollectionV1Schema: z.ZodObject<{
@@ -257,6 +287,17 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             valeur: z.ZodString;
         }, z.core.$strict>>>;
         inclusTrad: z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString>>;
+        inclusDetail: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            designation: z.ZodString;
+            designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+            quantite: z.ZodNumber;
+            unite: z.ZodOptional<z.ZodString>;
+        }, z.core.$strip> | z.ZodObject<{
+            designation: z.ZodString;
+            designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+            quantite: z.ZodNumber;
+            unite: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>>;
     }, z.core.$strip> | z.ZodObject<{
         id: z.ZodNumber;
         reference: z.ZodString;
@@ -308,6 +349,17 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             valeur: z.ZodString;
         }, z.core.$strict>>>;
         inclusTrad: z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString>>;
+        inclusDetail: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            designation: z.ZodString;
+            designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+            quantite: z.ZodNumber;
+            unite: z.ZodOptional<z.ZodString>;
+        }, z.core.$strip> | z.ZodObject<{
+            designation: z.ZodString;
+            designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+            quantite: z.ZodNumber;
+            unite: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>>;
     }, z.core.$strict>>;
 }, z.core.$strip>;
 export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
@@ -374,6 +426,17 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             valeur: z.ZodString;
         }, z.core.$strict>>>;
         inclusTrad: z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString>>;
+        inclusDetail: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            designation: z.ZodString;
+            designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+            quantite: z.ZodNumber;
+            unite: z.ZodOptional<z.ZodString>;
+        }, z.core.$strip> | z.ZodObject<{
+            designation: z.ZodString;
+            designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+            quantite: z.ZodNumber;
+            unite: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>>;
     }, z.core.$strip> | z.ZodObject<{
         id: z.ZodNumber;
         reference: z.ZodString;
@@ -425,6 +488,17 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             valeur: z.ZodString;
         }, z.core.$strict>>>;
         inclusTrad: z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString>>;
+        inclusDetail: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            designation: z.ZodString;
+            designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+            quantite: z.ZodNumber;
+            unite: z.ZodOptional<z.ZodString>;
+        }, z.core.$strip> | z.ZodObject<{
+            designation: z.ZodString;
+            designations: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+            quantite: z.ZodNumber;
+            unite: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>>;
     }, z.core.$strict>>;
 }, z.core.$strict>;
 export type CatalogueCollectionV1 = z.infer<typeof catalogueCollectionV1Schema>;

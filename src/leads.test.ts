@@ -13,6 +13,7 @@ import {
   leadV1ProducteurSchema,
   LEAD_CONFIGURATEUR_LIMITES,
   configurateurSchema,
+  panierSchema,
 } from "./leads.js";
 
 const lead = {
@@ -203,5 +204,34 @@ describe("configuration visuelle opaque dans le lead", () => {
   });
   it("refuse un JSON dépassant 750 ko", () => {
     expect(configurateurSchema.safeParse({ gamme: "tente", articles: [], configuration3d: "x".repeat(750001) }).success).toBe(false);
+  });
+});
+
+describe("la demande groupée — plusieurs configurateurs, UNE demande (v0.18.0)", () => {
+  const ecran = { gamme: "ecran" as const, lien: "https://hallucinecran.fr/configurateur?audience=p4", articles: [{ slug: "ecran-soufflerie-9m", quantite: 1 }] };
+  const tente = { gamme: "tente" as const, lien: "https://hallucinecran.fr/tente-spider?c=abc", articles: [{ slug: "tente-spider-6x6", quantite: 1 }] };
+  const arche = { gamme: "arche" as const, articles: [{ slug: "arche-4m-2-6m-45cm", quantite: 2 }] };
+
+  it("accompagne un lead, avec ou sans `configurateur`", () => {
+    expect(leadV1ProducteurSchema.safeParse({ ...lead, panier: [ecran, tente, arche] }).success).toBe(true);
+    // La composition courante recopiée pour un CRM qui ne lit pas encore le panier.
+    expect(leadV1ProducteurSchema.safeParse({ ...lead, configurateur: tente, panier: [ecran, tente] }).success).toBe(true);
+  });
+
+  it("borne le panier à dix compositions", () => {
+    expect(LEAD_CONFIGURATEUR_LIMITES.panier).toBe(10);
+    expect(panierSchema.safeParse(Array.from({ length: 10 }, () => arche)).success).toBe(true);
+    expect(panierSchema.safeParse(Array.from({ length: 11 }, () => arche)).success).toBe(false);
+  });
+
+  it("chaque composition obéit au contrat d'un configurateur — aucun prix, même dans un panier", () => {
+    const avecPrix = { ...arche, articles: [{ slug: "arche-4m-2-6m-45cm", quantite: 1, prixHT: 1 }] };
+    expect(leadV1ProducteurSchema.safeParse({ ...lead, panier: [ecran, avecPrix] }).success).toBe(false);
+    expect(panierSchema.safeParse([{ ...ecran, gamme: "portique" }]).success).toBe(false);
+  });
+
+  it("passe tel quel chez le consommateur — un CRM d'avant v0.18.0 garde la clé sans la lire", () => {
+    const lu = leadV1ConsommateurSchema.safeParse({ entreprise: "Acme", panier: [ecran, tente] });
+    expect(lu.success && "panier" in lu.data).toBe(true);
   });
 });

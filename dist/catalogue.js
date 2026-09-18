@@ -21,7 +21,8 @@
  * les seuls types déclarés : `slugSite` est null sur TOUS les packs et
  * locations, `designations` est {} sur les tentes, `specs` est null hors
  * écrans. Nullable partout, optional nulle part : la projection CRM écrit
- * toujours les 14 clés.
+ * toujours les 14 clés — une seule exception, `inclusDetail` (v0.18.0),
+ * optionnelle pour qu'un site à jour lise encore un CRM qui ne l'émet pas.
  */
 import { z } from "zod";
 export const CATALOGUE_CONTRACT_VERSION = 1;
@@ -90,8 +91,37 @@ export const catalogueSpecsV1StrictSchema = z.strictObject(specsForme);
 const caracteristiqueForme = { libelle: z.string(), valeur: z.string() };
 export const catalogueCaracteristiqueV1Schema = z.object(caracteristiqueForme);
 const caracteristiqueStricte = z.strictObject(caracteristiqueForme);
-// ─── Un item du catalogue — les 14 clés de l'allowlist CRM ─────────────────
-const itemForme = (specs, caracteristique) => ({
+// ─── Ce qui est livré AVEC le produit (v0.18.0) ────────────────────────────
+/**
+ * Une ligne de `inclusDetail` : un objet fourni avec le produit, sans
+ * supplément — la pompe, le sac de transport, les cordes d'un écran assemblé.
+ *
+ * Il ne remplace pas `inclus`, et n'a pas pu le remplacer : `inclus` existe
+ * depuis août 2026 en LISTE DE TEXTES saisie à la main dans le CRM, et le site
+ * en production la lit. Changer sa forme aurait cassé le parse de tous les
+ * items. `inclusDetail` est la même idée, DÉRIVÉE par le CRM de ce que le
+ * produit contient vraiment (sa nomenclature), avec une quantité et les
+ * traductions.
+ *
+ * AUCUN prix, aucun coût, aucune référence, aucun fournisseur — et le strict
+ * le fige : une clé de plus dans une ligne est un échec avant émission. La
+ * référence d'un composant nommerait le fabricant (« BAYES-SAC »).
+ *
+ * - `designations` : par locale (en/de/es/it/pt), absent quand le CRM n'a que
+ *   le français ;
+ * - `quantite` : dans l'unité du composant (40 pour 40 m de corde) ;
+ * - `unite` : présente seulement quand ce n'est pas « une pièce » (« m »).
+ */
+const inclusLigneForme = {
+    designation: z.string(),
+    designations: z.record(z.string(), z.string()).optional(),
+    quantite: z.number().positive(),
+    unite: z.string().optional(),
+};
+export const catalogueInclusLigneV1Schema = z.object(inclusLigneForme);
+const inclusLigneStricte = z.strictObject(inclusLigneForme);
+// ─── Un item du catalogue — les 15 clés de l'allowlist CRM (14 + inclusDetail) ─
+const itemForme = (specs, caracteristique, inclusLigne) => ({
     id: z.number().int(),
     reference: z.string(),
     slugSite: z.string().nullable(),
@@ -111,11 +141,16 @@ const itemForme = (specs, caracteristique) => ({
     inclus: z.array(z.string()),
     caracteristiquesTrad: z.record(z.string(), z.array(caracteristique)),
     inclusTrad: z.record(z.string(), z.array(z.string())),
+    /* v0.18.0 — la SEULE clé optionnelle de l'item, par exception au patron
+       « nullable jamais absent » : un site passé en v0.18.0 doit continuer de
+       lire un CRM qui ne l'émet pas encore, sans écarter l'item. Le CRM, lui,
+       l'écrit toujours ([] quand rien n'est livré avec). */
+    inclusDetail: z.array(inclusLigne).optional(),
 });
 /** Côté consommateur (site) : une clé inconnue est IGNORÉE, jamais une erreur. */
-export const catalogueItemV1Schema = z.object(itemForme(catalogueSpecsV1Schema, catalogueCaracteristiqueV1Schema));
+export const catalogueItemV1Schema = z.object(itemForme(catalogueSpecsV1Schema, catalogueCaracteristiqueV1Schema, catalogueInclusLigneV1Schema));
 /** Côté producteur (CRM) : une clé de trop est un ÉCHEC — strict en profondeur. */
-export const catalogueItemV1StrictSchema = z.strictObject(itemForme(catalogueSpecsV1StrictSchema, caracteristiqueStricte));
+export const catalogueItemV1StrictSchema = z.strictObject(itemForme(catalogueSpecsV1StrictSchema, caracteristiqueStricte, inclusLigneStricte));
 // ─── L'enveloppe ───────────────────────────────────────────────────────────
 const collectionForme = (item) => ({
     contractVersion: z.number().int().min(1),
