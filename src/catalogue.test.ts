@@ -13,6 +13,8 @@ import {
   catalogueCollectionV1StrictSchema,
   catalogueItemV1Schema,
   catalogueItemV1StrictSchema,
+  catalogueSpecsV1Schema,
+  catalogueSpecsV1StrictSchema,
   urlCatalogueV1,
 } from "./catalogue.js";
 
@@ -231,5 +233,17 @@ describe("photoIds — les photos du produit (v0.19.0)", () => {
     for (const photoIds of [["https://crm.hallucinecran.fr/api/public-media/x.jpg"], [{ id: 1, url: "x" }], [0], [-3], [1.5]]) {
       expect(catalogueItemV1StrictSchema.safeParse({ ...item, photoIds }).success).toBe(false);
     }
+  });
+});
+
+describe("public conseillé — publicMin / publicMax (v0.20.0)", () => {
+  it("le consommateur accepte un CRM qui ne les émet pas encore, et les lit quand il les émet", () => {
+    expect(catalogueSpecsV1Schema.safeParse(specs).success).toBe(true);
+    const lu = catalogueSpecsV1Schema.parse({ ...specs, publicMin: 80, publicMax: 150 });
+    expect([lu.publicMin, lu.publicMax]).toEqual([80, 150]);
+  });
+  it("refuse un public qui n'est pas un entier positif", () => {
+    expect(catalogueSpecsV1StrictSchema.safeParse({ ...specs, publicMin: -1, publicMax: 150 }).success).toBe(false);
+    expect(catalogueSpecsV1StrictSchema.safeParse({ ...specs, publicMin: "80", publicMax: 150 }).success).toBe(false);
   });
 });

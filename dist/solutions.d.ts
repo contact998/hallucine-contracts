@@ -23,6 +23,8 @@ export declare const solutionV1Schema: z.ZodObject<{
     reference: z.ZodString;
     formule: z.ZodNullable<z.ZodString>;
     audience: z.ZodNullable<z.ZodNumber>;
+    audienceMin: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    audienceMax: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     tailleM: z.ZodNullable<z.ZodNumber>;
     ecranDesignation: z.ZodNullable<z.ZodString>;
     projecteur: z.ZodNullable<z.ZodString>;
@@ -35,6 +37,8 @@ export declare const solutionV1StrictSchema: z.ZodObject<{
     reference: z.ZodString;
     formule: z.ZodNullable<z.ZodString>;
     audience: z.ZodNullable<z.ZodNumber>;
+    audienceMin: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    audienceMax: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     tailleM: z.ZodNullable<z.ZodNumber>;
     ecranDesignation: z.ZodNullable<z.ZodString>;
     projecteur: z.ZodNullable<z.ZodString>;
@@ -51,6 +55,8 @@ export declare const solutionsCollectionV1Schema: z.ZodObject<{
         reference: z.ZodString;
         formule: z.ZodNullable<z.ZodString>;
         audience: z.ZodNullable<z.ZodNumber>;
+        audienceMin: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+        audienceMax: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
         tailleM: z.ZodNullable<z.ZodNumber>;
         ecranDesignation: z.ZodNullable<z.ZodString>;
         projecteur: z.ZodNullable<z.ZodString>;
@@ -61,6 +67,8 @@ export declare const solutionsCollectionV1Schema: z.ZodObject<{
         reference: z.ZodString;
         formule: z.ZodNullable<z.ZodString>;
         audience: z.ZodNullable<z.ZodNumber>;
+        audienceMin: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+        audienceMax: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
         tailleM: z.ZodNullable<z.ZodNumber>;
         ecranDesignation: z.ZodNullable<z.ZodString>;
         projecteur: z.ZodNullable<z.ZodString>;
@@ -77,6 +85,8 @@ export declare const solutionsCollectionV1StrictSchema: z.ZodObject<{
         reference: z.ZodString;
         formule: z.ZodNullable<z.ZodString>;
         audience: z.ZodNullable<z.ZodNumber>;
+        audienceMin: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+        audienceMax: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
         tailleM: z.ZodNullable<z.ZodNumber>;
         ecranDesignation: z.ZodNullable<z.ZodString>;
         projecteur: z.ZodNullable<z.ZodString>;
@@ -87,6 +97,8 @@ export declare const solutionsCollectionV1StrictSchema: z.ZodObject<{
         reference: z.ZodString;
         formule: z.ZodNullable<z.ZodString>;
         audience: z.ZodNullable<z.ZodNumber>;
+        audienceMin: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+        audienceMax: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
         tailleM: z.ZodNullable<z.ZodNumber>;
         ecranDesignation: z.ZodNullable<z.ZodString>;
         projecteur: z.ZodNullable<z.ZodString>;

@@ -101,3 +101,10 @@ describe("le chemin et la version", () => {
     expect(SOLUTIONS_CONTRACT_VERSION).toBe(1);
   });
 });
+
+describe("public conseillé du pack (v0.20.0)", () => {
+  it("lit audienceMin/audienceMax, et tolère leur absence", () => {
+    expect(solutionV1Schema.safeParse(solution).success).toBe(true);
+    expect(solutionV1StrictSchema.safeParse({ ...solution, audienceMin: 80, audienceMax: 150 }).success).toBe(true);
+  });
+});
