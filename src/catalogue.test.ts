@@ -218,3 +218,18 @@ describe("version", () => {
     expect(CATALOGUE_CONTRACT_VERSION).toBe(1);
   });
 });
+
+describe("photoIds — les photos du produit (v0.19.0)", () => {
+  it("se lit des deux côtés, et son absence n'écarte pas l'item (CRM pas encore à jour)", () => {
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, photoIds: [412, 87, 1203] }).success).toBe(true);
+    expect(catalogueItemV1Schema.safeParse({ ...item, photoIds: [412] }).success).toBe(true);
+    expect(catalogueItemV1StrictSchema.safeParse({ ...pack, photoIds: [] }).success).toBe(true);
+    expect(catalogueItemV1Schema.safeParse(item).success).toBe(true);
+  });
+
+  it("n'accepte que des IDs — jamais une adresse, un objet média ou un ID douteux", () => {
+    for (const photoIds of [["https://crm.hallucinecran.fr/api/public-media/x.jpg"], [{ id: 1, url: "x" }], [0], [-3], [1.5]]) {
+      expect(catalogueItemV1StrictSchema.safeParse({ ...item, photoIds }).success).toBe(false);
+    }
+  });
+});
