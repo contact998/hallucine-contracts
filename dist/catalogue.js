@@ -120,7 +120,7 @@ const inclusLigneForme = {
 };
 export const catalogueInclusLigneV1Schema = z.object(inclusLigneForme);
 const inclusLigneStricte = z.strictObject(inclusLigneForme);
-// ─── Un item du catalogue — les 15 clés de l'allowlist CRM (14 + inclusDetail) ─
+// ─── Un item du catalogue — les 16 clés de l'allowlist CRM (14 + inclusDetail + photoIds) ─
 const itemForme = (specs, caracteristique, inclusLigne) => ({
     id: z.number().int(),
     reference: z.string(),
@@ -146,6 +146,14 @@ const itemForme = (specs, caracteristique, inclusLigne) => ({
        lire un CRM qui ne l'émet pas encore, sans écarter l'item. Le CRM, lui,
        l'écrit toujours ([] quand rien n'est livré avec). */
     inclusDetail: z.array(inclusLigne).optional(),
+    /* v0.19.0 — les photos du produit, dans l'ordre choisi dans la fiche CRM
+       (onglet « Specs site »). Des IDs de la médiathèque PUBLIQUE, rien d'autre :
+       l'adresse, l'alt et ses traductions vivent dans le contrat média
+       (/api/public/v1/media), une seule fois — le catalogue ne recopie aucun
+       champ média. Le CRM n'y met que des médias qui passent son filtre public ;
+       un ID absent de la médiathèque côté consommateur s'ignore. Optionnelle
+       comme inclusDetail : un site en v0.19.0 lit un CRM qui ne l'émet pas encore. */
+    photoIds: z.array(z.number().int().positive()).optional(),
 });
 /** Côté consommateur (site) : une clé inconnue est IGNORÉE, jamais une erreur. */
 export const catalogueItemV1Schema = z.object(itemForme(catalogueSpecsV1Schema, catalogueCaracteristiqueV1Schema, catalogueInclusLigneV1Schema));

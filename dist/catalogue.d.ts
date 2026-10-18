@@ -165,6 +165,7 @@ export declare const catalogueItemV1Schema: z.ZodObject<{
         quantite: z.ZodNumber;
         unite: z.ZodOptional<z.ZodString>;
     }, z.core.$strict>>>;
+    photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
 }, z.core.$strip>;
 /** Côté producteur (CRM) : une clé de trop est un ÉCHEC — strict en profondeur. */
 export declare const catalogueItemV1StrictSchema: z.ZodObject<{
@@ -229,6 +230,7 @@ export declare const catalogueItemV1StrictSchema: z.ZodObject<{
         quantite: z.ZodNumber;
         unite: z.ZodOptional<z.ZodString>;
     }, z.core.$strict>>>;
+    photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
 }, z.core.$strict>;
 export type CatalogueItemV1 = z.infer<typeof catalogueItemV1Schema>;
 export declare const catalogueCollectionV1Schema: z.ZodObject<{
@@ -298,6 +300,7 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             quantite: z.ZodNumber;
             unite: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>>>;
+        photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
     }, z.core.$strip> | z.ZodObject<{
         id: z.ZodNumber;
         reference: z.ZodString;
@@ -360,6 +363,7 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             quantite: z.ZodNumber;
             unite: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>>>;
+        photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
     }, z.core.$strict>>;
 }, z.core.$strip>;
 export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
@@ -437,6 +441,7 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             quantite: z.ZodNumber;
             unite: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>>>;
+        photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
     }, z.core.$strip> | z.ZodObject<{
         id: z.ZodNumber;
         reference: z.ZodString;
@@ -499,6 +504,7 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             quantite: z.ZodNumber;
             unite: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>>>;
+        photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
     }, z.core.$strict>>;
 }, z.core.$strict>;
 export type CatalogueCollectionV1 = z.infer<typeof catalogueCollectionV1Schema>;
