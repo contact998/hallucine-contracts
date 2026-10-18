@@ -91,6 +91,16 @@ const specsForme = {
        CRM qui ne les émet pas encore ; le CRM, lui, les écrit toujours. */
     publicMin: z.number().int().nonnegative().nullable().optional(),
     publicMax: z.number().int().nonnegative().nullable().optional(),
+    /* v0.21.0 — la CAPACITÉ d'une tente, trois fourchettes « de … à … »
+       personnes : debout (cocktail), assis en rangs, à table (banquet). Saisies
+       dans la fiche CRM ; site, configurateur et graphe les lisent ici. Null hors
+       tentes. Optionnelles : un site en v0.21.0 lit un CRM qui ne les émet pas encore. */
+    deboutMin: z.number().int().nonnegative().nullable().optional(),
+    deboutMax: z.number().int().nonnegative().nullable().optional(),
+    assisMin: z.number().int().nonnegative().nullable().optional(),
+    assisMax: z.number().int().nonnegative().nullable().optional(),
+    tableMin: z.number().int().nonnegative().nullable().optional(),
+    tableMax: z.number().int().nonnegative().nullable().optional(),
 };
 export const catalogueSpecsV1Schema = z.object(specsForme);
 export const catalogueSpecsV1StrictSchema = z.strictObject(specsForme);

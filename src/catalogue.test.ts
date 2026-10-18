@@ -247,3 +247,11 @@ describe("public conseillé — publicMin / publicMax (v0.20.0)", () => {
     expect(catalogueSpecsV1StrictSchema.safeParse({ ...specs, publicMin: "80", publicMax: 150 }).success).toBe(false);
   });
 });
+
+describe("capacité des tentes — debout / assis / à table (v0.21.0)", () => {
+  it("tolère leur absence et lit les trois fourchettes", () => {
+    expect(catalogueSpecsV1Schema.safeParse(specs).success).toBe(true);
+    const lu = catalogueSpecsV1StrictSchema.parse({ ...specs, deboutMin: 36, deboutMax: 48, assisMin: 30, assisMax: 36, tableMin: 18, tableMax: 24 });
+    expect([lu.deboutMax, lu.assisMax, lu.tableMax]).toEqual([48, 36, 24]);
+  });
+});
