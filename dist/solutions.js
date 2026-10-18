@@ -22,8 +22,13 @@ const solutionForme = {
     reference: z.string(),
     /** « Essentiel » | « Confort » | « Prestige » — dérivé de la désignation, donc nullable. */
     formule: z.string().nullable(),
-    /** Nombre de spectateurs (100, 400, 1500…), dérivé lui aussi. NOMBRE, pas libellé. */
+    /** @deprecated depuis v0.20.0 — vaut audienceMax. Lire audienceMin/audienceMax. */
     audience: z.number().nullable(),
+    /* v0.20.0 — le public conseillé du pack = celui de l'ÉCRAN qu'il contient
+       (specs publicMin/publicMax du catalogue), plus un chiffre tapé dans un
+       libellé. Optionnels : un site en v0.20.0 lit un CRM qui ne les émet pas encore. */
+    audienceMin: z.number().nullable().optional(),
+    audienceMax: z.number().nullable().optional(),
     /** Largeur de toile de l'écran inclus, en mètres — dérivée de sa référence. */
     tailleM: z.number().nullable(),
     ecranDesignation: z.string().nullable(),

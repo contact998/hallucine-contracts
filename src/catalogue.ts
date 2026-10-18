@@ -93,6 +93,13 @@ const specsForme = {
   /* Hauteur du cadre de pieds (cm) des arches « à pieds » — la 4ᵉ cote de la
      référence Bayes. Null sur toutes les autres formes, et hors arches. */
   hauteurPiedsCm: z.number().nullable(),
+  /* v0.20.0 — le PUBLIC CONSEILLÉ d'un écran, deux nombres « de … à … »
+     spectateurs, saisis dans la fiche CRM (onglet Specs site). Seule source :
+     le formulaire, le configurateur, le guide PDF et les packs le lisent ici.
+     Null hors écrans. Optionnels comme photoIds : un site en v0.20.0 lit un
+     CRM qui ne les émet pas encore ; le CRM, lui, les écrit toujours. */
+  publicMin: z.number().int().nonnegative().nullable().optional(),
+  publicMax: z.number().int().nonnegative().nullable().optional(),
 };
 
 export const catalogueSpecsV1Schema = z.object(specsForme);
