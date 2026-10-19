@@ -118,6 +118,12 @@ export declare const catalogueInclusLigneV1Schema: z.ZodObject<{
     unite: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 export type CatalogueInclusLigneV1 = z.infer<typeof catalogueInclusLigneV1Schema>;
+export declare const catalogueTextesLangueV1Schema: z.ZodObject<{
+    description: z.ZodNullable<z.ZodString>;
+    seoTitre: z.ZodNullable<z.ZodString>;
+    seoMeta: z.ZodNullable<z.ZodString>;
+}, z.core.$strip>;
+export type CatalogueTextesLangueV1 = z.infer<typeof catalogueTextesLangueV1Schema>;
 /** Côté consommateur (site) : une clé inconnue est IGNORÉE, jamais une erreur. */
 export declare const catalogueItemV1Schema: z.ZodObject<{
     id: z.ZodNumber;
@@ -190,6 +196,15 @@ export declare const catalogueItemV1Schema: z.ZodObject<{
         unite: z.ZodOptional<z.ZodString>;
     }, z.core.$strict>>>;
     photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
+    textes: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+        description: z.ZodNullable<z.ZodString>;
+        seoTitre: z.ZodNullable<z.ZodString>;
+        seoMeta: z.ZodNullable<z.ZodString>;
+    }, z.core.$strip> | z.ZodObject<{
+        description: z.ZodNullable<z.ZodString>;
+        seoTitre: z.ZodNullable<z.ZodString>;
+        seoMeta: z.ZodNullable<z.ZodString>;
+    }, z.core.$strict>>>;
 }, z.core.$strip>;
 /** Côté producteur (CRM) : une clé de trop est un ÉCHEC — strict en profondeur. */
 export declare const catalogueItemV1StrictSchema: z.ZodObject<{
@@ -263,6 +278,15 @@ export declare const catalogueItemV1StrictSchema: z.ZodObject<{
         unite: z.ZodOptional<z.ZodString>;
     }, z.core.$strict>>>;
     photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
+    textes: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+        description: z.ZodNullable<z.ZodString>;
+        seoTitre: z.ZodNullable<z.ZodString>;
+        seoMeta: z.ZodNullable<z.ZodString>;
+    }, z.core.$strip> | z.ZodObject<{
+        description: z.ZodNullable<z.ZodString>;
+        seoTitre: z.ZodNullable<z.ZodString>;
+        seoMeta: z.ZodNullable<z.ZodString>;
+    }, z.core.$strict>>>;
 }, z.core.$strict>;
 export type CatalogueItemV1 = z.infer<typeof catalogueItemV1Schema>;
 export declare const catalogueCollectionV1Schema: z.ZodObject<{
@@ -341,6 +365,15 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             unite: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>>>;
         photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
+        textes: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+            description: z.ZodNullable<z.ZodString>;
+            seoTitre: z.ZodNullable<z.ZodString>;
+            seoMeta: z.ZodNullable<z.ZodString>;
+        }, z.core.$strip> | z.ZodObject<{
+            description: z.ZodNullable<z.ZodString>;
+            seoTitre: z.ZodNullable<z.ZodString>;
+            seoMeta: z.ZodNullable<z.ZodString>;
+        }, z.core.$strict>>>;
     }, z.core.$strip> | z.ZodObject<{
         id: z.ZodNumber;
         reference: z.ZodString;
@@ -412,6 +445,15 @@ export declare const catalogueCollectionV1Schema: z.ZodObject<{
             unite: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>>>;
         photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
+        textes: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+            description: z.ZodNullable<z.ZodString>;
+            seoTitre: z.ZodNullable<z.ZodString>;
+            seoMeta: z.ZodNullable<z.ZodString>;
+        }, z.core.$strip> | z.ZodObject<{
+            description: z.ZodNullable<z.ZodString>;
+            seoTitre: z.ZodNullable<z.ZodString>;
+            seoMeta: z.ZodNullable<z.ZodString>;
+        }, z.core.$strict>>>;
     }, z.core.$strict>>;
 }, z.core.$strip>;
 export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
@@ -498,6 +540,15 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             unite: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>>>;
         photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
+        textes: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+            description: z.ZodNullable<z.ZodString>;
+            seoTitre: z.ZodNullable<z.ZodString>;
+            seoMeta: z.ZodNullable<z.ZodString>;
+        }, z.core.$strip> | z.ZodObject<{
+            description: z.ZodNullable<z.ZodString>;
+            seoTitre: z.ZodNullable<z.ZodString>;
+            seoMeta: z.ZodNullable<z.ZodString>;
+        }, z.core.$strict>>>;
     }, z.core.$strip> | z.ZodObject<{
         id: z.ZodNumber;
         reference: z.ZodString;
@@ -569,6 +620,15 @@ export declare const catalogueCollectionV1StrictSchema: z.ZodObject<{
             unite: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>>>;
         photoIds: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
+        textes: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+            description: z.ZodNullable<z.ZodString>;
+            seoTitre: z.ZodNullable<z.ZodString>;
+            seoMeta: z.ZodNullable<z.ZodString>;
+        }, z.core.$strip> | z.ZodObject<{
+            description: z.ZodNullable<z.ZodString>;
+            seoTitre: z.ZodNullable<z.ZodString>;
+            seoMeta: z.ZodNullable<z.ZodString>;
+        }, z.core.$strict>>>;
     }, z.core.$strict>>;
 }, z.core.$strict>;
 export type CatalogueCollectionV1 = z.infer<typeof catalogueCollectionV1Schema>;
