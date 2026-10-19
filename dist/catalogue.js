@@ -137,8 +137,18 @@ const inclusLigneForme = {
 };
 export const catalogueInclusLigneV1Schema = z.object(inclusLigneForme);
 const inclusLigneStricte = z.strictObject(inclusLigneForme);
-// ─── Un item du catalogue — les 16 clés de l'allowlist CRM (14 + inclusDetail + photoIds) ─
-const itemForme = (specs, caracteristique, inclusLigne) => ({
+// ─── Les textes d'une langue (v0.22.0) ─────────────────────────────────────
+const textesLangueForme = {
+    description: z.string().nullable(),
+    /** Balise <title> de la page produit, sans le nom de la marque (le site l'ajoute). */
+    seoTitre: z.string().nullable(),
+    /** <meta name="description">. */
+    seoMeta: z.string().nullable(),
+};
+export const catalogueTextesLangueV1Schema = z.object(textesLangueForme);
+const textesLangueStricte = z.strictObject(textesLangueForme);
+// ─── Un item du catalogue — les 17 clés de l'allowlist CRM (14 + inclusDetail + photoIds + textes) ─
+const itemForme = (specs, caracteristique, inclusLigne, textesLangue) => ({
     id: z.number().int(),
     reference: z.string(),
     slugSite: z.string().nullable(),
@@ -171,11 +181,20 @@ const itemForme = (specs, caracteristique, inclusLigne) => ({
        un ID absent de la médiathèque côté consommateur s'ignore. Optionnelle
        comme inclusDetail : un site en v0.19.0 lit un CRM qui ne l'émet pas encore. */
     photoIds: z.array(z.number().int().positive()).optional(),
+    /* v0.22.0 — les textes de la page produit, PAR LANGUE (fr compris, à la
+       différence de `designations` : la description n'a pas de colonne source
+       côté item). Pour chaque langue : la description (texte brut, paragraphes
+       séparés par une ligne vide), le titre SEO et la meta description. Chaque
+       champ est nullable — une langue peut n'avoir que sa description. Locales
+       ouvertes comme `designations`. Optionnelle comme photoIds : un site en
+       v0.22.0 lit un CRM qui ne l'émet pas encore ; une langue absente se replie
+       sur le français, côté site. */
+    textes: z.record(z.string(), textesLangue).optional(),
 });
 /** Côté consommateur (site) : une clé inconnue est IGNORÉE, jamais une erreur. */
-export const catalogueItemV1Schema = z.object(itemForme(catalogueSpecsV1Schema, catalogueCaracteristiqueV1Schema, catalogueInclusLigneV1Schema));
+export const catalogueItemV1Schema = z.object(itemForme(catalogueSpecsV1Schema, catalogueCaracteristiqueV1Schema, catalogueInclusLigneV1Schema, catalogueTextesLangueV1Schema));
 /** Côté producteur (CRM) : une clé de trop est un ÉCHEC — strict en profondeur. */
-export const catalogueItemV1StrictSchema = z.strictObject(itemForme(catalogueSpecsV1StrictSchema, caracteristiqueStricte, inclusLigneStricte));
+export const catalogueItemV1StrictSchema = z.strictObject(itemForme(catalogueSpecsV1StrictSchema, caracteristiqueStricte, inclusLigneStricte, textesLangueStricte));
 // ─── L'enveloppe ───────────────────────────────────────────────────────────
 const collectionForme = (item) => ({
     contractVersion: z.number().int().min(1),

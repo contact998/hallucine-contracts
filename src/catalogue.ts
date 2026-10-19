@@ -154,12 +154,26 @@ export const catalogueInclusLigneV1Schema = z.object(inclusLigneForme);
 const inclusLigneStricte = z.strictObject(inclusLigneForme);
 export type CatalogueInclusLigneV1 = z.infer<typeof catalogueInclusLigneV1Schema>;
 
-// ─── Un item du catalogue — les 16 clés de l'allowlist CRM (14 + inclusDetail + photoIds) ─
+// ─── Les textes d'une langue (v0.22.0) ─────────────────────────────────────
+
+const textesLangueForme = {
+  description: z.string().nullable(),
+  /** Balise <title> de la page produit, sans le nom de la marque (le site l'ajoute). */
+  seoTitre: z.string().nullable(),
+  /** <meta name="description">. */
+  seoMeta: z.string().nullable(),
+};
+export const catalogueTextesLangueV1Schema = z.object(textesLangueForme);
+const textesLangueStricte = z.strictObject(textesLangueForme);
+export type CatalogueTextesLangueV1 = z.infer<typeof catalogueTextesLangueV1Schema>;
+
+// ─── Un item du catalogue — les 17 clés de l'allowlist CRM (14 + inclusDetail + photoIds + textes) ─
 
 const itemForme = (
   specs: typeof catalogueSpecsV1Schema | typeof catalogueSpecsV1StrictSchema,
   caracteristique: typeof catalogueCaracteristiqueV1Schema | typeof caracteristiqueStricte,
   inclusLigne: typeof catalogueInclusLigneV1Schema | typeof inclusLigneStricte,
+  textesLangue: typeof catalogueTextesLangueV1Schema | typeof textesLangueStricte,
 ) => ({
   id: z.number().int(),
   reference: z.string(),
@@ -193,16 +207,25 @@ const itemForme = (
      un ID absent de la médiathèque côté consommateur s'ignore. Optionnelle
      comme inclusDetail : un site en v0.19.0 lit un CRM qui ne l'émet pas encore. */
   photoIds: z.array(z.number().int().positive()).optional(),
+  /* v0.22.0 — les textes de la page produit, PAR LANGUE (fr compris, à la
+     différence de `designations` : la description n'a pas de colonne source
+     côté item). Pour chaque langue : la description (texte brut, paragraphes
+     séparés par une ligne vide), le titre SEO et la meta description. Chaque
+     champ est nullable — une langue peut n'avoir que sa description. Locales
+     ouvertes comme `designations`. Optionnelle comme photoIds : un site en
+     v0.22.0 lit un CRM qui ne l'émet pas encore ; une langue absente se replie
+     sur le français, côté site. */
+  textes: z.record(z.string(), textesLangue).optional(),
 });
 
 /** Côté consommateur (site) : une clé inconnue est IGNORÉE, jamais une erreur. */
 export const catalogueItemV1Schema = z.object(
-  itemForme(catalogueSpecsV1Schema, catalogueCaracteristiqueV1Schema, catalogueInclusLigneV1Schema),
+  itemForme(catalogueSpecsV1Schema, catalogueCaracteristiqueV1Schema, catalogueInclusLigneV1Schema, catalogueTextesLangueV1Schema),
 );
 
 /** Côté producteur (CRM) : une clé de trop est un ÉCHEC — strict en profondeur. */
 export const catalogueItemV1StrictSchema = z.strictObject(
-  itemForme(catalogueSpecsV1StrictSchema, caracteristiqueStricte, inclusLigneStricte),
+  itemForme(catalogueSpecsV1StrictSchema, caracteristiqueStricte, inclusLigneStricte, textesLangueStricte),
 );
 
 export type CatalogueItemV1 = z.infer<typeof catalogueItemV1Schema>;

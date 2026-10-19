@@ -255,3 +255,25 @@ describe("capacité des tentes — debout / assis / à table (v0.21.0)", () => {
     expect([lu.deboutMax, lu.assisMax, lu.tableMax]).toEqual([48, 36, 24]);
   });
 });
+
+describe("textes — description, titre et meta par langue (v0.22.0)", () => {
+  const textes = {
+    fr: { description: "Écran gonflable étanche de 5 m.", seoTitre: "Écran gonflable étanche 5 m", seoMeta: "Un écran de 5 m pour le cinéma plein air." },
+    en: { description: "Airtight inflatable screen, 5 m.", seoTitre: null, seoMeta: null },
+  };
+  it("se lit des deux côtés, et son absence n'écarte pas l'item (CRM pas encore à jour)", () => {
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, textes }).success).toBe(true);
+    expect(catalogueItemV1Schema.safeParse({ ...item, textes }).success).toBe(true);
+    expect(catalogueItemV1StrictSchema.safeParse({ ...pack, textes: {} }).success).toBe(true);
+    expect(catalogueItemV1Schema.safeParse(item).success).toBe(true);
+  });
+  it("le strict refuse une clé de trop dans une langue, le tolérant l'ignore", () => {
+    const avecFuite = { ...textes, fr: { ...textes.fr, prixAchatEur: 1200 } };
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, textes: avecFuite }).success).toBe(false);
+    expect(catalogueItemV1Schema.safeParse({ ...item, textes: avecFuite }).success).toBe(true);
+  });
+  it("refuse un champ absent ou non textuel", () => {
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, textes: { fr: { description: "x", seoTitre: null } } }).success).toBe(false);
+    expect(catalogueItemV1StrictSchema.safeParse({ ...item, textes: { fr: { description: 3, seoTitre: null, seoMeta: null } } }).success).toBe(false);
+  });
+});
