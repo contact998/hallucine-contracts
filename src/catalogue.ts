@@ -49,6 +49,10 @@ export const CATALOGUE_V1_ROLES = [
      cotes voyagent dans `specs` (largeurCm / hauteurCm / profondeurCm), comme
      le mobilier. */
   "arche_vente",
+  /* Sonorisation (19/10/2026) : les ensembles JBL et HK des packs, vendus
+     seuls. Catégorie DÉDIÉE côté CRM (« Sonorisation — Vente ») : la
+     « Sonorisation » historique garde ses lignes de saisie à 0 €, privées. */
+  "son_vente",
 ] as const;
 export type CatalogueRoleV1 = (typeof CATALOGUE_V1_ROLES)[number];
 
