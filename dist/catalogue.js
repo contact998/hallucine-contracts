@@ -195,6 +195,7 @@ const itemForme = (specs, caracteristique, inclusLigne, textesLangue) => ({
        v0.22.0 lit un CRM qui ne l'émet pas encore ; une langue absente se replie
        sur le français, côté site. */
     textes: z.record(z.string(), textesLangue).optional(),
+    optiquesCompatibles: z.record(z.string(), z.string()).optional(),
 });
 /** Côté consommateur (site) : une clé inconnue est IGNORÉE, jamais une erreur. */
 export const catalogueItemV1Schema = z.object(itemForme(catalogueSpecsV1Schema, catalogueCaracteristiqueV1Schema, catalogueInclusLigneV1Schema, catalogueTextesLangueV1Schema));

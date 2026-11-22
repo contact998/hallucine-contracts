@@ -221,6 +221,7 @@ const itemForme = (
      v0.22.0 lit un CRM qui ne l'émet pas encore ; une langue absente se replie
      sur le français, côté site. */
   textes: z.record(z.string(), textesLangue).optional(),
+  optiquesCompatibles: z.record(z.string(), z.string()).optional(),
 });
 
 /** Côté consommateur (site) : une clé inconnue est IGNORÉE, jamais une erreur. */
