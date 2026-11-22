@@ -53,6 +53,7 @@ export const CATALOGUE_V1_ROLES = [
      seuls. Catégorie DÉDIÉE côté CRM (« Sonorisation — Vente ») : la
      « Sonorisation » historique garde ses lignes de saisie à 0 €, privées. */
   "son_vente",
+  "optique_vente",
 ] as const;
 export type CatalogueRoleV1 = (typeof CATALOGUE_V1_ROLES)[number];
 
