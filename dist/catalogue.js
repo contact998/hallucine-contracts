@@ -50,6 +50,7 @@ export const CATALOGUE_V1_ROLES = [
        seuls. Catégorie DÉDIÉE côté CRM (« Sonorisation — Vente ») : la
        « Sonorisation » historique garde ses lignes de saisie à 0 €, privées. */
     "son_vente",
+    "optique_vente",
 ];
 /** L'URL complète pour un rôle — le nom du paramètre appartient au contrat. */
 export function urlCatalogueV1(base, role) {

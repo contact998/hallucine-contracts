@@ -80,7 +80,7 @@ describe("le chemin et les rôles appartiennent au contrat", () => {
     expect(CATALOGUE_V1_PATH).toBe("/api/public/v1/catalogue");
   });
 
-  it("fige les huit rôles publics — occasion n'y entrera jamais", () => {
+  it("fige les neuf rôles publics — occasion n'y entrera jamais", () => {
     expect([...CATALOGUE_V1_ROLES]).toEqual([
       "ecran_vente",
       "pack",
@@ -90,6 +90,7 @@ describe("le chemin et les rôles appartiennent au contrat", () => {
       "projecteur_vente",
       "arche_vente",
       "son_vente",
+      "optique_vente",
     ]);
     expect(CATALOGUE_V1_ROLES).not.toContain("occasion");
   });
